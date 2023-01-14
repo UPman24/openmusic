@@ -4,12 +4,12 @@
 
 ## 项目展示：
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z1.png" width="100px"/>
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z2.png" width="100px"/>
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z3.png" width="100px"/>
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z4.png" width="100px"/>
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z5.png" width="100px"/>
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z7.gif" width="100px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z1.png" width="150px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z2.png" width="150px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z3.png" width="150px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z4.png" width="150px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z5.png" width="150px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z7.gif" width="150px"/>
 
 ## 项目演示：
 
