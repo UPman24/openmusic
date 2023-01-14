@@ -1,12 +1,61 @@
+# 开源音乐阅读手册
+
+##### 注意：本项目为学习项目，禁止用于商业用途。音乐版权归音乐公司所有。
+
+## 项目展示：
+
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z1.png" width="100px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z2.png" width="100px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z3.png" width="100px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z4.png" width="100px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z5.png" width="100px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z7.gif" width="100px"/>
+
+## 项目演示：
+
+#### 安卓下载地址：（二维码）
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/app/download.png" width="150px"/>
+
+#### 在线预览
+
+###### 注意：只支持手机 H5版，不支持电脑网页版。
+
+[小北云音乐](http://music.bfmzdx.cn)【最好用微信打开链接浏览】
+
+## 项目模块：
+
+```
+1.用户登录
+2.喜欢音乐列表
+3.音乐收藏
+4.播放控制（顺序播放、单曲循环、随机播放）
+5.更多
+6.播放、暂停
+7.后台播放
+8.上一首、下一首
+9.进度条拖动
+10.歌词显示
+11.底部音乐 tabbar 左右切换
+12.UI美化
+    |_ iOS：高斯模糊、磨砂玻璃
+    |_ 安卓：背景虚化
+```
+
+## 项目特点：
+
+### 1.音乐接口不掉，并特殊化处理。
+
+### 2.docker 部署，后台可以随时切换。
+
+### 3.所有接口可以完全自定义。
+
 ## Uniapp部署
 
-### （1）如果是 插件市场则直接导入即可。如果是 gitee 可以在 uniapp 文件夹下导入项目。
-
-### （2）步骤一：导入 HbuilderX 后点击 main.js。
+### （1）步骤一：导入 HbuilderX 后点击 main.js。
 
 <img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u1.png" width="200px"/>
 
-### （3）步骤二：
+### （2）步骤二：
 
 ```
 按照下面的数据库、后端的步骤把值填好
@@ -173,3 +222,5 @@ uni.request({
 ##### 说明：此接口用于程序内部，直接浏览器访问比较繁琐。
 
 ### 4.后端配置好后 http://你的（IP地址+端口）（或者是CDN域名），这个地址就是 `Vue.prototype.$pythonurl` 的地址。
+
+
