@@ -223,4 +223,4 @@ uni.request({
 
 ### 4.后端配置好后 http://你的（IP地址+端口）（或者是CDN域名），这个地址就是 `Vue.prototype.$pythonurl` 的地址。
 
-
+### QQ交流群：643980281
