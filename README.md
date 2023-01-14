@@ -1,7 +1,5 @@
 # 开源音乐阅读手册
 
-##### 注意：本项目为学习项目，禁止用于商业用途。音乐版权归音乐公司所有。
-
 ## 项目展示：
 
 <img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z1.png" width="150px"/>
