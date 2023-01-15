@@ -11,6 +11,34 @@
 <img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z5.png" width="150px"/>
 <img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z7.gif" width="150px"/>
 
+## 项目地址：
+
+#### （1）gitee：https://gitee.com/ZhenYJ/openmusic
+
+#### （2）插件市场：https://ext.dcloud.net.cn/plugin?id=10665
+
+#### （3）github：https://github.com/UPman24/openmusic
+
+##### 文件结构说明：
+```
+根目录
+    |_ node                         //此文件用于用户信息存储，数据库操作
+        |_ components
+                |_ user
+                    |_ user.js      //需要修改的文件
+                    
+        |_ Dockerfile               //可以选择 Docker 部署
+        |_ index.js                 //执行 npm install && npm run start 能直接部署
+        |_ package.json             //依赖
+        
+    |_ python                       //用于获取歌曲信息
+        |_ Dockerfile               //可以选择 Docker 部署
+        |_ main.py                  //主程序
+        |_ requirements.txt         //依赖
+        
+    |_ uniapp                       //此文件可以直接导入 HbuilderX 中
+```
+
 ## 项目演示：
 
 #### 安卓下载地址：（二维码）
@@ -220,7 +248,7 @@
 #### （1）获取歌曲列表
 |接口地址|参数说明|
 |--------|----|
-|/search/\<keyword>/?page=\<num>|keyword就是歌曲名称(或者歌手名称)，num就是页数（一页默认大概15-20个左右）|
+|/search/[keyword]/?page=[num]|keyword就是歌曲名称(或者歌手名称)，num就是页数（一页默认大概15-20个左右）|
 
 ##### 演示1(使用uniapp请求)
 
@@ -243,7 +271,7 @@ uni.request({
 
 |接口地址|参数说明|
 |--------|----|
-|/fast_search/\<path:url>|path:url就是获取到的歌曲链接|
+|/fast_search/[path:url]|path:url就是获取到的歌曲链接|
 
 ##### 演示：
 
