@@ -1,5 +1,7 @@
 # 开源音乐阅读手册
 
+##### 注意：本项目为学习项目，禁止用于商业用途。音乐版权归音乐公司所有。
+
 ## 项目展示：
 
 <img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/zs/z1.png" width="150px"/>
@@ -51,7 +53,7 @@
 
 ### （1）步骤一：导入 HbuilderX 后点击 main.js。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u1.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u1.png" width="250px"/>
 
 ### （2）步骤二：
 
@@ -59,11 +61,11 @@
 按照下面的数据库、后端的步骤把值填好
 ```
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u2.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u2.png" width="250px"/>
 
 ### （3）步骤三：点击 manifest.json。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u3.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u3.png" width="250px"/>
 
 ### （4）步骤四：在 "app-plus" 节点下添加
 
@@ -73,7 +75,7 @@
 },
 ```
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u4.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u4.png" width="250px"/>
 
 ### （5）步骤五：在 "app-plus" 节点下的 "ios" 节点添加
 
@@ -85,7 +87,7 @@
 },
 ```
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u5.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u5.png" width="250px"/>
 
 ### （6）最后保存所有设置。启动后端以及数据库，使用 HbuilderX 运行到浏览器或者打包成App均可。
 
@@ -95,27 +97,57 @@
 
 #### （1）步骤一：打开宝塔面板软件商店，搜索：MongoDB，选择官方的即可。安装。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m1.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m1.png" width="250px"/>
 
 #### （2）步骤二：找到已安装的软件，把开关打开，让MongoDB模块出现在首页。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m2.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m2.png" width="250px"/>
 
 #### （3）步骤三：在首页找到 MongoDB 并点击它（如下图）。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m3.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m3.png" width="250px"/>
 
 #### （4）步骤四：打开，设置数据库。先点击“数据库”，输入“数据库名称为：musics”，再点击创建数据库。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m4.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m4.png" width="250px"/>
 
 #### （5）步骤五：点击配置项。设置 BindIP 为 `0.0.0.0` ，Port 为 `27017`。然后点击保存。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m5.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m5.png" width="250px"/>
 
 #### （6）步骤六：要记得把端口打开。点击安全把 27017 端口放行。
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m6.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m6.png" width="250px"/>
+
+#### （7）步骤七：在数据库中创建一个名称为 user 的表，用于存放用户数据。
+
+##### 字段说明：
+```
+初始化数据结构
+{
+    "_id": "xxxxx",
+    "username": "xxxxx",
+    "list": []
+}
+
+有数据的情况
+{
+    "_id": "xxxxx",//唯一 id
+    "username": "xxxxx",//用户手机号
+    "list": [
+        {
+            "author": "歌手名称",
+            "lrc": [],//歌词
+            "pic": "xxxxx",//歌曲封面
+            "pre_url": "预加载链接",
+            "title": "歌曲名称",
+            "url": "音乐真实链接"
+        },
+        .....
+    ]
+}
+```
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/mongodb/m7.png" width="250px"/>
 
 ### 2.nodejs 配置
 
@@ -127,7 +159,7 @@
         |_ user
             |_ user.js
 
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/node/n1.png" width="200px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/node/n1.png" width="250px"/>
 
 #### （2）步骤二：回到 node 文件夹下，执行 `npm install`
 
