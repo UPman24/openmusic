@@ -46,13 +46,15 @@
 							<view style="font-size: 16px; color: #FFFFFF; opacity: 0.8; text-align: center; padding-top: 250rpx;">搜索中...</view>
 						</block>
 						<block v-for="(list,index) in Music">
-							<view @click="playThis(index)" style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6%;">
+							<view @click="playThis(index)" style="display: flex; width: 90%; flex-direction: row; margin-top: 60rpx; margin-left: 6%;">
 								<image :src="list.pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 10rpx;"></image>
-								<view style="display: flex; flex-direction: column;">
+								<view style="display: flex; flex-direction: column; width: 80%;">
 									<view style="font-size: 18px; margin-top: 5rpx; margin-left: 30rpx; font-weight: bold; color: #FFFFFF; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1;">
 										{{list.title}}
 									</view>
-									<view style="font-size: 14px; color: #FFFFFF; margin-left: 30rpx; margin-top: 5rpx;">{{list.author}}</view>
+									<view style="font-size: 14px; width: 95%; color: #FFFFFF; margin-left: 30rpx; margin-top: 5rpx;">
+										{{list.author}}
+									</view>
 								</view>
 							</view>
 						</block>
@@ -160,9 +162,7 @@
 		},
 		watch:{
 			text(val){
-				if(val == ""){
-					this.page = 1;
-				}
+				this.page = 1;
 			}
 		},
 		methods:{
@@ -173,6 +173,7 @@
 				this.$refs.song.open("right");
 			},
 			playThis(index){
+				console.log(this.Music[index]);
 				this.$musicInfo.author = this.Music[index].author;
 				this.$musicInfo.lrc = this.Music[index].lrc;
 				this.$musicInfo.pic = this.Music[index].pic;
@@ -304,14 +305,16 @@
 				uni.$emit('popshows', {
 					ispop: true
 				})
-				uni.$emit('info', {
-					author: this.Music[index].author,
-					lrc: this.Music[index].lrc,
-					pic: this.Music[index].pic,
-					pre_url: this.Music[index].pre_url,
-					title: this.Music[index].title,
-					url: this.Music[index].url
-				})
+				setTimeout(()=>{
+					uni.$emit('info', {
+						author: this.Music[index].author,
+						lrc: this.Music[index].lrc,
+						pic: this.Music[index].pic,
+						pre_url: this.Music[index].pre_url,
+						title: this.Music[index].title,
+						url: this.Music[index].url
+					})
+				},200)
 				// #endif
 			},
 			closeSearch(){
@@ -335,21 +338,74 @@
 				this.$refs.msga1.open('center');
 				this.page++;
 				uni.request({
-					url: this.$pythonurl + '/search/' + this.text + '/?page=' + this.page,
+					url: this.$pythonurl + '/kuwo/search/searchMusicBykeyWord?key=' + this.text + '&pn=' + this.page + '&rn=12',
 					method: 'GET',
 					success: (res) => {
-						this.$refs.msga1.close();
-						let Music = res.data;
-						if(Music.length == 0) {
-							this.$refs.msga2.open('center');
-							setTimeout(()=>{
-								this.$refs.msga2.close();
-							},2000)
-						} else {
-							for(let i=0;i<Music.length;i++){
-								this.Music.push(Music[i]);
+						let music = res.data.data.list;
+						for(let i=0;i<music.length;i++){
+							let msg = {
+								'url': '',
+								'pre_url': '',
+								'pic': '',
+								'title': '',
+								'author': '',
+								'lrc': ''
 							}
+							if(music[i]['pic'] === undefined){
+								music[i]['pic'] = '';
+							} else {
+								msg['pic'] = music[i]['pic'];
+							}
+							msg['title'] = music[i]['name'];
+							msg['author'] = music[i]['artist'];
+							msg['pre_url'] = this.$pythonurl + '/kuwo/url?mid=' + music[i]['rid'];
+							let p = new Promise((resolve,reject)=>{
+								let fun = ()=>{
+									uni.request({
+										url: this.$pythonurl + '/kuwo/url?mid=' + music[i]['rid'],
+										method: 'GET',
+										success: (qw) => {
+											resolve(qw.data.data.url);
+										},
+										fail: () => {
+											fun();
+										}
+									})
+								}
+								fun();
+							})
+							p.then(url => {
+								msg['url'] = url;
+								let w = new Promise((resolve,reject)=>{
+									let fun = ()=>{
+										uni.request({
+											url: this.$pythonurl + '/kuwo/lrc?musicId=' + music[i]['rid'],
+											method: 'GET',
+											success: (qa) => {
+												resolve(qa.data.data.lrclist);
+											},
+											fail: () => {
+												fun();
+											}
+										})
+									}
+									fun();
+								})
+								w.then(lrc => {
+									msg['lrc'] = lrc;
+									this.Music.push(msg);
+								})
+							})
 						}
+						setTimeout(()=>{
+							this.$refs.msga1.close();
+							if(this.Music.length == 0){
+								this.$refs.msga2.open('center');
+								setTimeout(()=>{
+									this.$refs.msga2.close();
+								},2000)
+							}
+						},2500)
 					}
 				})
 			},
@@ -361,10 +417,74 @@
 				this.isClick = true;
 				if(this.text !== ''){
 					uni.request({
-						url: this.$pythonurl + '/search/' + this.text + '/?page=' + this.page,
+						url: this.$pythonurl + '/kuwo/search/searchMusicBykeyWord?key=' + this.text + '&pn=' + this.page + '&rn=12',
 						method: 'GET',
 						success: (res) => {
-							this.Music = res.data;
+							let music = res.data.data.list;
+							for(let i=0;i<music.length;i++){
+								let msg = {
+									'url': '',
+									'pre_url': '',
+									'pic': '',
+									'title': '',
+									'author': '',
+									'lrc': ''
+								}
+								if(music[i]['pic'] === undefined){
+									music[i]['pic'] = '';
+								} else {
+									msg['pic'] = music[i]['pic'];
+								}
+								msg['title'] = music[i]['name'];
+								msg['author'] = music[i]['artist'];
+								msg['pre_url'] = this.$pythonurl + '/kuwo/url?mid=' + music[i]['rid'];
+								let p = new Promise((resolve,reject)=>{
+									let fun = ()=>{
+										uni.request({
+											url: this.$pythonurl + '/kuwo/url?mid=' + music[i]['rid'],
+											method: 'GET',
+											success: (qw) => {
+												resolve(qw.data.data.url);
+											},
+											fail: () => {
+												fun();
+											}
+										})
+									}
+									fun();
+								})
+								p.then(url => {
+									msg['url'] = url;
+									let w = new Promise((resolve,reject)=>{
+										let fun = ()=>{
+											uni.request({
+												url: this.$pythonurl + '/kuwo/lrc?musicId=' + music[i]['rid'],
+												method: 'GET',
+												success: (qa) => {
+													resolve(qa.data.data.lrclist);
+												},
+												fail: () => {
+													fun();
+												}
+											})
+										}
+										fun();
+									})
+									w.then(lrc => {
+										msg['lrc'] = lrc;
+										this.Music.push(msg);
+									})
+								})
+							}
+							setTimeout(()=>{
+								if(this.Music.length == 0){
+									this.isClick = false;
+									this.$refs.msga2.open('center');
+									setTimeout(()=>{
+										this.$refs.msga2.close();
+									},2000)
+								}
+							},2200)
 						}
 					})
 				} else {

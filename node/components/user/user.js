@@ -6,6 +6,8 @@ const jsonParser = bodyParser.json();
 // 1.连接数据库
 const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://这里填你的mongodb数据库IP地址:27017/";
+// 例如：const url = "mongodb://users:123456@114.114.114.114:27017/?authSource=musics"
+// 宝塔 mongodb 默认没有密码，也没有安全保护。可以参考这个链接来调整：https://blog.csdn.net/qq_40881695/article/details/125426705
 
 router.get('/', (req, res) => {
 	console.log(req.query)

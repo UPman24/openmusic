@@ -114,11 +114,11 @@
 			playThis(index){
 				this.$refs.msga.open('center');
 				uni.request({
-					url: this.$pythonurl + '/fast_search/' + this.Music[index].pre_url,
+					url: this.Music[index].pre_url,
 					method: 'GET',
 					success: (res) => {
-						let data = res.data;
-						this.Music[index] = data;
+						let data = res.data.data;
+						this.Music[index].url = data.url;
 						this.$musicInfo.author = this.Music[index].author;
 						this.$musicInfo.lrc = this.Music[index].lrc;
 						this.$musicInfo.pic = this.Music[index].pic;
@@ -145,6 +145,7 @@
 														success: (req)=> {
 															this.$refs.msga.close();
 															var savedFilePath = req.savedFilePath;
+															uni.$emit('update_image');
 															this.$audio.src = savedFilePath;
 															this.$audio.play();
 														}
@@ -163,6 +164,9 @@
 						}
 						// #endif
 						// #ifdef H5
+						if(this.platform !== 'ios'){
+							uni.$emit('update_image');
+						}
 						this.$refs.msga.close();
 						this.$audio.src = this.$musicInfo.url;
 						this.$audio.play();

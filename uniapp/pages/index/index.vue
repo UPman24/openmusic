@@ -26,7 +26,7 @@
 		</block>
 		<!-- 电脑版本 -->
 		<block v-if="show"></block>
-		<uni-popup type="bottom" ref="music">
+		<uni-popup type="bottom" ref="music" @maskClick="maskClick">
 			<!-- #ifdef APP -->
 			<view :style="'width: '+ windowWidth +'px; height: '+ screenHeight +'px;'">
 				<!-- 音乐界面 -->
@@ -34,7 +34,7 @@
 			</view>
 			<!-- #endif -->
 			<!-- #ifdef H5 -->
-			<view :style="'width: '+ windowWidth +'px; height: '+ (screenHeight*0.83) +'px;'">
+			<view :style="'width: '+ windowWidth +'px; height: '+ (screenHeight*0.82) +'px;'">
 				<!-- 音乐界面 -->
 				<Music></Music>
 			</view>
@@ -98,10 +98,10 @@
 			// #endif
 			setTimeout(()=>{
 				uni.request({
-					url: this.$pythonurl + '/fast_search/' + this.$musicInfo.pre_url,
+					url: this.$musicInfo.pre_url,
 					method: 'GET',
 					success: (res) => {
-						let data = res.data;
+						let data = res.data.data;
 						this.$musicInfo.url = data.url;
 						// #ifdef APP
 						if(this.platform !== 'ios'){
@@ -127,31 +127,38 @@
 															uni.hideLoading();
 															var savedFilePath = req.savedFilePath;
 															this.$audio.src = savedFilePath;
+															this.$audio.pause();
 														}
 													});
 												},200)
 											}
 										})
 									}
-								},
-								fail: () => {
-									uni.hideLoading();
 								}
 							});
+							setTimeout(()=>{
+								uni.hideLoading();
+							},3000)
 						} else {
 							// ios 端
 							this.$audio.src = this.$musicInfo.url;
+							this.$audio.pause();
 						}
 						// #endif
 						// #ifdef H5
 						this.$audio.src = this.$musicInfo.url;
+						this.$audio.pause();
 						// #endif
 					}
 				})
 			},500)
 		},
 		methods: {
-			
+			maskClick(){
+				uni.$emit('popshows',{
+					ispop: false
+				})
+			}
 		}
 	}
 </script>

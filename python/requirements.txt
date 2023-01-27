@@ -1,6 +1,0 @@
-flask_cors
-flask
-asyncio
-aiohttp
-async_timeout
-bs4

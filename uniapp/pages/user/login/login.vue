@@ -2,13 +2,13 @@
 	<view>
 		<view style="font-size: 18px; font-weight: bold; margin-top: 60upx; margin-left: 10%;">手机号</view>
 		<view style="display: flex; flex-direction: row;">
-			<input style="width: 70%; margin-top: 20upx; margin-left: 10%; font-size: 14px; font-weight: bold;" placeholder="请输入手机号" type="number" maxlength="11" placeholder-style="font-size: 14px; font-weight: 400; color: #999999;" v-model="phone" :disabled="disabled" :adjust-position="false"/>
+			<input style="width: 70%; margin-top: 20upx; margin-left: 10%; font-size: 14px; font-weight: bold; color: #7c7b7d;" placeholder="请输入手机号" type="number" maxlength="11" placeholder-style="font-size: 14px; font-weight: 400; color: #999999;" v-model="phone" :disabled="disabled" :adjust-position="false"/>
 			<image @click="clearPhoneValue" v-if="phone !== ''" src="@/static/content/close.png" style="width: 40upx; height: 40upx; margin-top: 20upx; margin-left: 20upx;"></image>
 		</view>
 		<view style="width: 80%; height: 1px; background-color: #F1F1F1; margin-left: 10%; margin-top: 40upx;"></view>
 		<view style="font-size: 18px; font-weight: bold; margin-top: 20upx; margin-left: 10%;">验证码</view>
 		<view style="display: flex; flex-direction: row;">
-			<input style="width: 55%; margin-top: 20upx; margin-left: 10%; font-size: 14px; font-weight: bold;" placeholder="备用验证码123456" type="number" maxlength="11" placeholder-style="font-size: 14px; font-weight: 400; color: #999999;" v-model="codes"/>
+			<input style="width: 55%; margin-top: 20upx; margin-left: 10%; font-size: 14px; font-weight: bold; color: #7c7b7d;" placeholder="备用验证码123456" type="number" maxlength="11" placeholder-style="font-size: 14px; font-weight: 400; color: #999999;" v-model="codes"/>
 			<view v-if="isShowGetSecond" @click="getSecond" style="font-size: 16px; color: #007AFF; margin-top: 20upx; margin-left: 30upx;">获取验证码</view>
 			<view v-if="!isShowGetSecond" style="font-size: 16px; font-weight: bold; color: #999999; margin-top: 20upx; margin-left: 50upx;">还剩{{second}}秒</view>
 		</view>
@@ -34,7 +34,7 @@
 				baseurl: ''
 			}
 		},
-		onShow() {
+		created() {
 			this.baseurl = this.$nodeurl;
 		},
 		methods: {
@@ -69,9 +69,15 @@
 					uni.showLoading({
 						title: '正在获取验证码'
 					})
-					// 获取手机验证码逻辑
-					// ？？？？？？？？
-					// 
+					uni.request({
+						url: 'https://2908110e-6da2-4899-8b44-d45c153457ad.bspapp.com/tosendsms?info=sendMusic&phone=' + this.phone,
+						method: 'GET',
+						success: (res) => {
+							uni.hideLoading()
+							this.code = res.data.codes + '';
+							// console.log(this.code);
+						}
+					})
 					this.disabled = true;
 					// 秒数递减
 					this.secondControl = setInterval(()=>{

@@ -4,18 +4,20 @@
 			<view style="width: 100%; height: 1px;"></view>
 			<view style="font-size: 22px; font-weight: bold; position: absolute; color: #000000; text-align: center; margin-top: 10%; width: 100%; opacity: 0.5;"></view>
 			<image src="@/static/music.png" style="width: 400rpx; height: 400rpx; margin-left: 23%; margin-top: 25%; border-radius: 1000rpx;"></image>
-			<view style="font-size: 24px; font-weight: bold; color: #00a9ff; width: 100%; text-align: center; margin-top: 80rpx;">开源音乐 听我所想</view>
+			<view style="font-size: 24px; font-weight: bold; color: #00a9ff; width: 100%; text-align: center; margin-top: 80rpx;">小北云音乐 听我所想</view>
 			<view class="smallcircle2"></view>
 			<view class="bigcircle2"></view>
 			<view @click="phoneAndcode" style="width: 90%; height: 100rpx; background:linear-gradient(to right,#65adff,#0092ff); margin-top: 120rpx; border-radius: 100rpx; margin-left: 5%;">
 				<view style="font-size: 18px; font-weight: bold; color: #FFFFFF; text-align: center; padding-top: 28rpx;">手机验证码登录</view>
 			</view>
 			<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 8%; opacity: 0.7;" :class="isYSZCChange?'yszc':''">
-				<view @click="YSZC" style="width: 25rpx; height: 25rpx; border: #000000 solid 1px; margin-top: 7rpx; border-radius: 8rpx;">
-					<image v-if="isYSZC" src="@/static/yes.png" style="width: 25rpx; height: 25rpx; position: absolute;"></image>
+				<view @click="YSZC" style="width: 25rpx; height: 25rpx; border: #999999 solid 1px; margin-top: 7rpx; border-radius: 8rpx;">
+					<image v-if="isYSZC" src="@/static/dui.png" style="width: 25rpx; height: 25rpx; position: absolute;"></image>
 				</view>
-				<view style="font-size: 14px; margin-left: 20rpx;">同意《用户许可协议/隐私政策》协议</view>
+				<view style="font-size: 14px; margin-left: 20rpx; color: #999999; ">同意《用户许可协议/隐私政策》协议</view>
 			</view>
+			<view style="text-align: center; font-size: 14px; color: #999999; width: 100%; margin-top: 60rpx;">小北云提供技术支持</view>
+			<view style="text-align: center; font-size: 14px; color: #999999; width: 100%; bottom: 20px; position: absolute;">- Copyright © 2023 虚拟现实团队 -</view>
 		</block>
 		<block v-if="show"></block>
 	</view>

@@ -83,10 +83,10 @@ Vue.prototype.$current = ()=>{
 						title: '加载中...'
 					})
 					uni.request({
-						url: Vue.prototype.$pythonurl + '/fast_search/' + music[info].pre_url,
+						url: music[info].pre_url,
 						method: 'GET',
 						success: (res) => {
-							let data = res.data;
+							let data = res.data.data;
 							music[info].isclick = true;
 							music[info].url = data.url;
 							for(let i=0;i<music.length;i++){
@@ -132,6 +132,7 @@ Vue.prototype.$current = ()=>{
 																uni.hideLoading();
 																var savedFilePath = req.savedFilePath;
 																Vue.prototype.$audio.src = savedFilePath;
+																uni.$emit('update_image');
 																Vue.prototype.$audio.play();
 																Vue.prototype.$isnext = true;
 															}
@@ -152,6 +153,9 @@ Vue.prototype.$current = ()=>{
 							// #endif
 							// #ifdef H5
 							uni.hideLoading();
+							if(Vue.prototype.$platform !== 'ios'){
+								uni.$emit('update_image');
+							}
 							Vue.prototype.$audio.src = Vue.prototype.$musicInfo.url;
 							Vue.prototype.$audio.play();
 							Vue.prototype.$isnext = true;
@@ -173,10 +177,10 @@ Vue.prototype.$current = ()=>{
 							title: '加载中...'
 						})
 						uni.request({
-							url: Vue.prototype.$pythonurl + '/fast_search/' + music[0].pre_url,
+							url: music[0].pre_url,
 							method: 'GET',
 							success: (res) => {
-								let data = res.data;
+								let data = res.data.data;
 								music[0].url = data.url;
 								music[0].isclick = true;
 								for(let j=0;j<music.length;j++){
@@ -222,6 +226,7 @@ Vue.prototype.$current = ()=>{
 																	uni.hideLoading();
 																	var savedFilePath = req.savedFilePath;
 																	Vue.prototype.$audio.src = savedFilePath;
+																	uni.$emit('update_image');
 																	Vue.prototype.$audio.play();
 																	Vue.prototype.$isnext = true;
 																}
@@ -242,6 +247,9 @@ Vue.prototype.$current = ()=>{
 								// #endif
 								// #ifdef H5
 								uni.hideLoading();
+								if(Vue.prototype.$platform !== 'ios'){
+									uni.$emit('update_image');
+								}
 								Vue.prototype.$audio.src = Vue.prototype.$musicInfo.url;
 								Vue.prototype.$audio.play();
 								Vue.prototype.$isnext = true;
@@ -253,10 +261,10 @@ Vue.prototype.$current = ()=>{
 							title: '加载中...'
 						})
 						uni.request({
-							url: Vue.prototype.$pythonurl + '/fast_search/' + music[info+1].pre_url,
+							url: music[info+1].pre_url,
 							method: 'GET',
 							success: (res) => {
-								let data = res.data;
+								let data = res.data.data;
 								music[info+1].url = data.url;
 								music[info+1].isclick = true;
 								for(let j=0;j<music.length;j++){
@@ -301,6 +309,7 @@ Vue.prototype.$current = ()=>{
 																	uni.hideLoading();
 																	var savedFilePath = req.savedFilePath;
 																	Vue.prototype.$audio.src = savedFilePath;
+																	uni.$emit('update_image');
 																	Vue.prototype.$audio.play();
 																	Vue.prototype.$isnext = true;
 																}
@@ -321,6 +330,9 @@ Vue.prototype.$current = ()=>{
 								// #endif
 								// #ifdef H5
 								uni.hideLoading();
+								if(Vue.prototype.$platform !== 'ios'){
+									uni.$emit('update_image');
+								}
 								Vue.prototype.$audio.src = Vue.prototype.$musicInfo.url;
 								Vue.prototype.$audio.play();
 								Vue.prototype.$isnext = true;

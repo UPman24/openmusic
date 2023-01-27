@@ -154,11 +154,11 @@
 				let info = e.target.current;
 				this.$refs.msgs.open('center');
 				uni.request({
-					url: this.$pythonurl + '/fast_search/' + this.swiperList[info].pre_url,
+					url: this.swiperList[info].pre_url,
 					method: 'GET',
 					success: (res) => {
-						let data = res.data;
-						this.swiperList[info] = data;
+						let data = res.data.data;
+						this.swiperList[info].url = data.url;
 						this.$musicInfo.author = this.swiperList[info].author;
 						this.$musicInfo.lrc = this.swiperList[info].lrc;
 						this.$musicInfo.pic = this.swiperList[info].pic;

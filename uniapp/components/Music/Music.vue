@@ -2,16 +2,16 @@
 	<view>
 		<!-- 背景 -->
 		<image v-if="platform === 'ios'" :src="pic" mode="aspectFill" class="img-back" :style="'height: '+ screenHeight +'px;'"></image>
-		<image v-if="platform !== 'ios'" :src="pic" mode="aspectFill" class="imge" :style="'height: '+ screenHeight +'px;'"></image>
+		<helang-blur v-if="platform !== 'ios'" :params="params" class="helan" style="position: absolute; z-index: -1;"></helang-blur>
 		<!-- #ifdef APP -->
 		<view style="width: 100%; height: 80rpx; background-color: transparent;"></view>
 		<!-- 1.顶部菜单 -->
 		<view style="display: flex; flex-direction: row;">
 			<image @click="close" src="@/static/music/low.png" style="width: 50rpx; height: 44rpx; margin-left: 60rpx; margin-top: 40rpx;"></image>
 			<view style="display: flex; flex-direction: row; margin-left: 25%; margin-top: 35rpx;">
-				<view :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
+				<view @click="gequ" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
 				<view style="font-size: 14px; color: #FFFFFF; opacity: 0.5;">｜</view>
-				<view :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
+				<view @click="geci" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
 			</view>
 		</view>
 		<!-- 2.内容部分 -->
@@ -193,19 +193,49 @@
 			</swiper-item>
 			<swiper-item>
 				<!-- 歌词 -->
-				<view style="width: 100%; height: 100%;">
+				<view style="width: 100%; height: 100%;" v-show="showitem">
 					<view style="width: 100%; opacity: 0;">.</view>
-					<!-- 这里使用两个 view 套渐变效果 mask-image -->
+					<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
+					<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
 					<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to bottom, transparent, transparent 0%, black 10%);">
 						<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to top, transparent, transparent 10%, black 35%);">
-							<scroll-view style="margin-top: 10rpx; width: 100%; height: 100%;" :scroll-y="true">
-								<view style="margin-left: 8%;">
-									<view style="width: 100%; height: 100rpx;"></view>
-									<block v-for="li in lrc">
-										<view style="font-size: 22px; width: 80%; color: #FFFFFF; margin-top: 40rpx; opacity: 0.9;">{{li}}</view>
-									</block>
-									<view style="width: 100%; height: 600rpx;"></view>
-								</view>
+							<scroll-view v-show="showLoadLrc===true" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-into-view="scrollIntoView" :scroll-y="true" :scroll-with-animation="true">
+								<view style="width: 100%; height: 150px;"></view>
+								<block v-for="(list,index) in lrc" :key="index">
+									<view :id="list.place" style="width: 100%; height: 1px;"></view>
+									<view @click="toJump(index)" :style="'width: 85%; font-size: 26px; font-weight: bold; color: #FFFFFF; margin-top: 80rpx; opacity: 0.4; transform: translateY(150px); word-wrap:break-word;'+list.animations" :class="(index>Number(scrollIntoView.split('place')[1])&&(index-Number(scrollIntoView.split('place')[1]))<9)?'anima-'+(index-Number(scrollIntoView.split('place')[1])+1):''">
+										{{list.lineLyric}}
+									</view>
+								</block>
+								<view style="width: 100%; height: 600rpx;"></view>
+							</scroll-view>
+							<scroll-view v-show="showLoadLrc===false" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-y="true" :scroll-with-animation="true">
+								<view style="width: 100%; height: 20px;"></view>
+								<block v-for="(list,index) in content">
+									<view style="width: 85%; margin-top: 60rpx; display: flex; flex-direction: row;">
+										<image v-if="list.u_pic !== ''" :src="list.u_pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+										<image v-if="list.u_pic.length == 0" src="@/static/music.png" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+										<view style="width: 80%; margin-left: 30rpx; margin-top: 10rpx; display: flex; flex-direction: column;">
+											<view style="width: 100%; font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: 0.6; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+												{{list.u_name}}
+											</view>
+											<view style="width: 95%; font-size: 17px; font-weight: bold; color: #FFFFFF; opacity: 0.98;">
+												{{list.msg}}
+											</view>
+										</view>
+									</view>
+								</block>
+								<block v-if="content.length == 0">
+									<view style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">没有评论</view>
+									</view>
+								</block>
+								<block v-if="content.length !== 0">
+									<view @click="getMore" style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">获取更多</view>
+									</view>
+								</block>
+								<view style="width: 100%; height: 600rpx;"></view>
 							</scroll-view>
 						</view>
 					</view>
@@ -218,9 +248,9 @@
 		<view style="display: flex; flex-direction: row;">
 			<image @click="close" src="@/static/music/low.png" style="width: 50rpx; height: 44rpx; margin-left: 60rpx; margin-top: 40rpx;"></image>
 			<view style="display: flex; flex-direction: row; margin-left: 25%; margin-top: 35rpx;">
-				<view :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
+				<view @click="gequ" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
 				<view style="font-size: 14px; color: #FFFFFF; opacity: 0.5;">｜</view>
-				<view :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
+				<view @click="geci" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
 			</view>
 		</view>
 		<!-- 2.内容部分 -->
@@ -229,7 +259,7 @@
 				<scroll-view :style="'width: 100%; height: '+ (screenHeight*0.74) +'px; mask-image: linear-gradient(to top, transparent, transparent 3%, black 10%);'" :scroll-y="true">
 					<view style="width: 100%; height: 100%;">
 						<!-- 图片 -->
-						<view style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
+						<view id="a1" style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
 							<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 20rpx; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
 						</view>
 						<!-- 歌手信息 -->
@@ -252,7 +282,7 @@
 						<!-- 信息栏 -->
 						<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
 							<!-- 下载 -->
-							<view @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
+							<view id="a2" @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
 								<image src="@/static/music/download.png" style="width: 65rpx; height: 65rpx;"></image>
 								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
 							</view>
@@ -316,19 +346,49 @@
 			</swiper-item>
 			<swiper-item>
 				<!-- 歌词 -->
-				<view style="width: 100%; height: 100%;">
+				<view style="width: 100%; height: 100%;" v-show="showitem">
 					<view style="width: 100%; opacity: 0;">.</view>
-					<!-- 这里使用两个 view 套渐变效果 mask-image -->
+					<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
+					<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
 					<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to bottom, transparent, transparent 0%, black 10%);">
 						<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to top, transparent, transparent 10%, black 35%);">
-							<scroll-view style="margin-top: 10rpx; width: 100%; height: 100%;" :scroll-y="true">
-								<view style="margin-left: 8%;">
-									<view style="width: 100%; height: 100rpx;"></view>
-									<block v-for="li in lrc">
-										<view style="font-size: 22px; width: 80%; color: #FFFFFF; margin-top: 40rpx; opacity: 0.9;">{{li}}</view>
-									</block>
-									<view style="width: 100%; height: 600rpx;"></view>
-								</view>
+							<scroll-view v-show="showLoadLrc===true" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-into-view="scrollIntoView" :scroll-y="true" :scroll-with-animation="true">
+								<view style="width: 100%; height: 150px;"></view>
+								<block v-for="(list,index) in lrc" :key="index">
+									<view :id="list.place" style="width: 100%; height: 1px;"></view>
+									<view @click="toJump(index)" :style="'width: 85%; font-size: 26px; font-weight: bold; color: #FFFFFF; margin-top: 80rpx; opacity: 0.4; transform: translateY(150px); word-wrap:break-word;'+list.animations" :class="(index>Number(scrollIntoView.split('place')[1])&&(index-Number(scrollIntoView.split('place')[1]))<9)?'anima-'+(index-Number(scrollIntoView.split('place')[1])+1):''">
+										{{list.lineLyric}}
+									</view>
+								</block>
+								<view style="width: 100%; height: 600rpx;"></view>
+							</scroll-view>
+							<scroll-view v-show="showLoadLrc===false" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-y="true" :scroll-with-animation="true">
+								<view style="width: 100%; height: 20px;"></view>
+								<block v-for="(list,index) in content">
+									<view style="width: 85%; margin-top: 60rpx; display: flex; flex-direction: row;">
+										<image v-if="list.u_pic !== ''" :src="list.u_pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+										<image v-if="list.u_pic.length == 0" src="@/static/music.png" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+										<view style="width: 80%; margin-left: 30rpx; margin-top: 10rpx; display: flex; flex-direction: column;">
+											<view style="width: 100%; font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: 0.6; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+												{{list.u_name}}
+											</view>
+											<view style="width: 95%; font-size: 17px; font-weight: bold; color: #FFFFFF; opacity: 0.98;">
+												{{list.msg}}
+											</view>
+										</view>
+									</view>
+								</block>
+								<block v-if="content.length == 0">
+									<view style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">没有评论</view>
+									</view>
+								</block>
+								<block v-if="content.length !== 0">
+									<view @click="getMore" style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">获取更多</view>
+									</view>
+								</block>
+								<view style="width: 100%; height: 600rpx;"></view>
 							</scroll-view>
 						</view>
 					</view>
@@ -347,7 +407,7 @@
 			</view>
 		</uni-popup>
 		<uni-popup type="center" ref="msg1">
-			<view style="font-size: 16px; font-weight: bold; color: #FFFFFF;">没有更多歌曲</view>
+			<view style="font-size: 16px; font-weight: bold; color: #FFFFFF;">没有更多了</view>
 		</uni-popup>
 		<uni-popup type="center" ref="msg2">
 			<view style="font-size: 16px; font-weight: bold; color: #FFFFFF;">加载中...</view>
@@ -366,6 +426,7 @@
 </template>
 
 <script>
+	import helangBlur from "../helang-blur/helang-blur.vue";
 	import playlist from './playlist.vue';
 	import more from './more.vue';
 	export default {
@@ -401,20 +462,44 @@
 				
 				baseurl: '',
 				
-				platform: ""
+				platform: "",
+				
+				params:{
+					width: uni.getSystemInfoSync().windowWidth + 'px',
+					height: uni.getSystemInfoSync().screenHeight + 'px',
+					image: this.$musicInfo.pic,
+					blur: "xl"
+				},
+				
+				newtime: 0,
+				scrollIntoView: "",
+				
+				showLoadLrc: true,//默认展示加载中的歌词
+				showitem: false,
+				
+				iscreated: false,//控制退出界面循环不重复，节省性能
+				lrcshows: false,
+				
+				contentPage: 1,
+				content: [],//评论内容
+				cont: [],
 			};
 		},
 		components:{
-			playlist,more
+			playlist,more,helangBlur
 		},
 		created() {
+			this.iscreated = true;
+			this.contentPage = 1;
+			this.content = [];
+			this.cont = [];
 			// #ifdef APP
 			this.safearea = uni.getSystemInfoSync().safeArea.top;
 			// #endif
-			this.baseurl = this.$nodeurl;
 			this.screenHeight = uni.getSystemInfoSync().screenHeight;
 			this.windowWidth = uni.getSystemInfoSync().windowWidth;
 			this.platform = uni.getSystemInfoSync().platform;
+			this.baseurl = this.$nodeurl;
 			this.percent = 0;
 			this.endper = 0;
 			this.nowtime = '00:00';
@@ -429,21 +514,36 @@
 				this.isplay = false;
 			}
 			this.author = this.$musicInfo.author;
-			this.lrc = this.$musicInfo.lrc;
+			let lrc = this.$musicInfo.lrc;
+			for(let j=0;j<lrc.length;j++){
+				lrc[j].place = "place" + j;
+				lrc[j].animations = "";
+			}
+			this.lrc = lrc;
 			this.pic = this.$musicInfo.pic;
 			this.pre_url = this.$musicInfo.pre_url;
 			this.title = this.$musicInfo.title;
 			this.url = this.$musicInfo.url;
+			this.getContent();//获取评论
 			this.next1 = uni.getStorageSync("next").next1;
 			this.next2 = uni.getStorageSync("next").next2;
 			this.next3 = uni.getStorageSync("next").next3;
 			uni.$on('info', (data)=>{
+				this.contentPage = 1;
+				this.content = [];
+				this.cont = [];
 				this.author = data.author;
+				let lrc = data.lrc;
+				for(let j=0;j<lrc.length;j++){
+					lrc[j].place = "place" + j;
+					lrc[j].animations = "";
+				}
 				this.lrc = data.lrc;
 				this.pic = data.pic;
 				this.pre_url = data.pre_url;
 				this.title = data.title;
 				this.url = data.url;
+				this.getContent();//获取评论
 			})
 			uni.$on('isplay', (data)=>{
 				this.isplay = data.isplay;
@@ -454,6 +554,11 @@
 			uni.$on('close_playlist', ()=>{
 				this.$refs.playlist.close();
 			})
+			if(this.platform !== 'ios'){
+				uni.$on('update_image', ()=>{
+					this.params.image = this.$musicInfo.pic;
+				})
+			}
 			uni.$on('close_more', ()=>{
 				this.$refs.more.close();
 			})
@@ -476,10 +581,91 @@
 			})
 		},
 		destroyed() {
+			this.iscreated = false;
+			this.contentPage = 1;
+			this.content = [];
+			this.cont = [];
 			uni.$off('close_playlist');
 			uni.$off('close_more');
 		},
 		methods:{
+			getMore(){
+				this.$refs.msg2.open('center');
+				let str = this.$musicInfo.pre_url;
+				let mid = str.split('mid=')[1];
+				this.contentPage++;
+				uni.request({
+					url: this.$pythonurl + '/kuwo/comment?sid='+ mid +'&type=get_rec_comment&page='+ this.contentPage +'&rows=30&digest=15',
+					method: 'GET',
+					success: (res) => {
+						this.$refs.msg2.close();
+						let rows = res.data.rows;
+						if(rows !== undefined){
+							this.cont = rows;
+							for(let i=0;i<rows.length;i++){
+								this.content.push(rows[i]);
+							}
+						} else {
+							this.$refs.msg1.open('center');
+							setTimeout(()=>{
+								this.$refs.msg1.close();
+							},2000)
+						}
+					},
+					fail: () => {
+						this.contentPage--;
+					}
+				})
+				setTimeout(()=>{
+					this.$refs.msg2.close();
+				},2000)
+			},
+			getContent(){
+				let str = this.$musicInfo.pre_url;
+				let mid = str.split('mid=')[1]
+				uni.request({
+					url: this.$pythonurl + '/kuwo/comment?sid='+ mid +'&type=get_rec_comment&page='+ this.contentPage +'&rows=30&digest=15',
+					method: 'GET',
+					success: (res) => {
+						let rows = res.data.rows;
+						if(rows !== undefined){
+							for(let i=0;i<rows.length;i++){
+								this.content.push(rows[i]);
+							}
+						}
+					}
+				})
+			},
+			geci(){
+				this.current = 1;
+				this.showitem = true;
+			},
+			gequ(){
+				setTimeout(()=>{
+					this.current = 0;
+					this.showitem = false;
+				},80)
+			},
+			toJump(index){
+				let seek = parseInt( Number( this.lrc[index].time ) );
+				// console.log(seek);
+				this.$audio.seek(seek);
+				this.showLoadLrc = true;
+				this.$audio.play();
+				let animation = "opacity: 1; filter: blur(0px); -webkit-animation-fill-mode: forwards; animation-fill-mode: forwards;";
+				this.lrc[index].animations = animation;
+				for(let i=0;i<this.lrc.length;i++){
+					if(i !== index){
+						this.lrc[i].animations = "";
+					}
+				}
+			},
+			showCloseLrc(){
+				this.showLoadLrc = false;
+			},
+			showLrc(){
+				this.showLoadLrc = true;
+			},
 			closemsgx(){
 				this.$refs.msgx.close()
 			},
@@ -516,10 +702,10 @@
 						if(info == music.length-1){
 							this.$refs.msg2.open('center');
 							uni.request({
-								url: this.$pythonurl + '/fast_search/' + music[0].pre_url,
+								url: music[0].pre_url,
 								method: 'GET',
 								success: (res) => {
-									let data = res.data;
+									let data = res.data.data;
 									music[0].url = data.url;
 									music[0].isclick = true;
 									for(let j=0;j<music.length;j++){
@@ -563,6 +749,7 @@
 																	success: (req)=> {
 																		this.$refs.msg2.close();
 																		var savedFilePath = req.savedFilePath;
+																		this.params.image = this.$musicInfo.pic;
 																		this.$audio.src = savedFilePath;
 																		this.$audio.play();
 																	}
@@ -590,10 +777,10 @@
 						} else {
 							this.$refs.msg2.open('center');
 							uni.request({
-								url: this.$pythonurl + '/fast_search/' + music[info+1].pre_url,
+								url: music[info+1].pre_url,
 								method: 'GET',
 								success: (res) => {
-									let data = res.data;
+									let data = res.data.data;
 									music[info+1].url = data.url;
 									music[info+1].isclick = true;
 									for(let j=0;j<music.length;j++){
@@ -637,6 +824,7 @@
 																	success: (req)=> {
 																		this.$refs.msg2.close();
 																		var savedFilePath = req.savedFilePath;
+																		this.params.image = this.$musicInfo.pic;
 																		this.$audio.src = savedFilePath;
 																		this.$audio.play();
 																	}
@@ -683,10 +871,10 @@
 						if(ins == 0){
 							this.$refs.msg2.open('center');
 							uni.request({
-								url: this.$pythonurl + '/fast_search/' + music[music.length-1].pre_url,
+								url: music[music.length-1].pre_url,
 								method: 'GET',
 								success: (res) => {
-									let data = res.data;
+									let data = res.data.data;
 									music[music.length-1].url = data.url;
 									music[music.length-1].isclick = true;
 									for(let j=0;j<music.length;j++){
@@ -730,6 +918,7 @@
 																	success: (req)=> {
 																		this.$refs.msg2.close();
 																		var savedFilePath = req.savedFilePath;
+																		this.params.image = this.$musicInfo.pic;
 																		this.$audio.src = savedFilePath;
 																		this.$audio.play();
 																	}
@@ -757,10 +946,10 @@
 						} else {
 							this.$refs.msg2.open('center');
 							uni.request({
-								url: this.$pythonurl + '/fast_search/' + music[ins-1].pre_url,
+								url: music[ins-1].pre_url,
 								method: 'GET',
 								success: (res) => {
-									let data = res.data;
+									let data = res.data.data;
 									music[ins-1].url = data.url;
 									music[ins-1].isclick = true;
 									for(let j=0;j<music.length;j++){
@@ -804,6 +993,7 @@
 																	success: (req)=> {
 																		this.$refs.msg2.close();
 																		var savedFilePath = req.savedFilePath;
+																		this.params.image = this.$musicInfo.pic;
 																		this.$audio.src = savedFilePath;
 																		this.$audio.play();
 																	}
@@ -899,24 +1089,57 @@
 				}
 			},
 			perCircle(){
-				// 处理进度条、时间跳频问题
-				if(this.isToFlag == false){
-					setTimeout(()=>{
+				if(this.iscreated){
+					this.lrcshows = false;
+					// 处理进度条、时间跳频问题
+					if(this.isToFlag == false){
+						setTimeout(()=>{
+							this.endper = this.$percent;
+							this.nowtime = this.$timeobj.nowtime;
+							this.totaltime = this.$timeobj.totaltime;
+							this.isToFlag = true;
+							this.newtime = parseInt(Number(this.$currentTime));
+							let lrc = this.lrc;
+							for(let i=0;i<lrc.length;i++){
+								let num = parseInt(Number(lrc[i].time));
+								if(this.newtime > num-1 && this.newtime <= num){
+									this.scrollIntoView = "place"+i;
+									this.lrcshows = true;
+									let animation = "opacity: 1; filter: blur(0px); -webkit-animation-fill-mode: forwards; animation-fill-mode: forwards;";
+									this.lrc[i].animations = animation;
+									if(i <= lrc.length-1 && i >= 1){
+										this.lrc[i-1].animations = "";
+									}
+								}
+							}
+							lrc = [];
+						},500)
+					} else {
 						this.endper = this.$percent;
 						this.nowtime = this.$timeobj.nowtime;
 						this.totaltime = this.$timeobj.totaltime;
-						this.isToFlag = true;
-					},500)
-				} else {
-					this.endper = this.$percent;
-					this.nowtime = this.$timeobj.nowtime;
-					this.totaltime = this.$timeobj.totaltime;
-				}
-				setTimeout(()=>{
-					if(this.$isplay){
-						this.perCircle();
+						this.newtime = parseInt(Number(this.$currentTime));
+						let lrc = this.lrc;
+						for(let i=0;i<lrc.length;i++){
+							let num = parseInt(Number(lrc[i].time));
+							if(this.newtime > num-1 && this.newtime <= num){
+								this.scrollIntoView = "place"+i;
+								this.lrcshows = true;
+								let animation = "opacity: 1; -webkit-animation-fill-mode: forwards; animation-fill-mode: forwards;";
+								this.lrc[i].animations = animation;
+								if(i <= lrc.length-1 && i >= 1){
+									this.lrc[i-1].animations = "";
+								}
+							}
+						}
+						lrc = [];
 					}
-				},1000)
+					setTimeout(()=>{
+						if(this.$isplay){
+							this.perCircle();
+						}
+					},1000)
+				}
 			},
 			like(){
 				// console.log(uni.getStorageSync("username"))
@@ -1013,6 +1236,7 @@
 				}
 			},
 			close(){
+				this.showLoadLrc = true;
 				uni.$emit('popshows', {
 					ispop: false
 				})
@@ -1022,10 +1246,13 @@
 					case 0:
 					this.opc1 = 1;
 					this.opc2 = 0.6;
+					this.showLoadLrc = true;
+					this.showitem = false;
 						break;
 					case 1:
 					this.opc1 = 0.6;
 					this.opc2 = 1;
+					this.showitem = true;
 						break;
 					default:
 						break;
@@ -1035,8 +1262,7 @@
 	}
 </script>
 
-<style>
-	/* 控制滚动条不出现 */
+<style lang="scss" scoped>
 	/deep/::-webkit-scrollbar {
 		 display: none;
 		 width: 0;
@@ -1084,5 +1310,86 @@
 	    height: 100%;
 	    backdrop-filter: blur(100px);
 		background-color: rgba(0, 0, 0, .18);
+	}
+	.helan {
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 1.0);
+		border-top-left-radius: 40rpx;
+		border-top-right-radius: 40rpx;
+	}
+	@for $i from 2 through 9 {
+	    $time: ($i * 100+200) + ms;
+	    .anima-#{$i} {
+			transition: all 0.5s linear;
+			animation-name: toTop+$i; // toBottom
+			animation-duration: 0.5s; // 注释掉 会没有动画 就是帕帕一帧一帧的出来
+			animation-fill-mode: both;
+			animation-delay: $time;
+		}
+	}
+	@keyframes toTop2 {
+		0% {
+			transform: translateY(150px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
+	}
+	@keyframes toTop3 {
+		0% {
+			transform: translateY(160px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
+	}
+	@keyframes toTop4 {
+		0% {
+			transform: translateY(170px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
+	}
+	@keyframes toTop5 {
+		0% {
+			transform: translateY(180px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
+	}
+	@keyframes toTop6 {
+		0% {
+			transform: translateY(190px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
+	}
+	@keyframes toTop7 {
+		0% {
+			transform: translateY(200px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
+	}
+	@keyframes toTop8 {
+		0% {
+			transform: translateY(210px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
+	}
+	@keyframes toTop9 {
+		0% {
+			transform: translateY(220px);
+		}
+		100% {
+			transform: translateY(150px);
+		}
 	}
 </style>

@@ -31,10 +31,9 @@
         |_ index.js                 //执行 npm install && npm run start 能直接部署
         |_ package.json             //依赖
         
-    |_ python                       //用于获取歌曲信息
-        |_ Dockerfile               //可以选择 Docker 部署
-        |_ main.py                  //主程序
-        |_ requirements.txt         //依赖
+    |_ backnode                     //用于获取歌曲信息
+        |_ package.json             //依赖
+        |_ ...                      //执行 npm install && npm run ci && npm run start 能直接部署
         
     |_ uniapp                       //此文件可以直接导入 HbuilderX 中
 ```
@@ -42,7 +41,9 @@
 ## 项目演示：
 
 #### 安卓下载地址：（二维码）
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/app/download.png" width="150px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/app/download8.png" width="150px"/>
+
+#### [版本：1.1.6]
 
 #### 在线预览
 
@@ -117,9 +118,19 @@
 
 <img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/uniapp/u5.png" width="250px"/>
 
-### （6）最后保存所有设置。启动后端以及数据库，使用 HbuilderX 运行到浏览器或者打包成App均可。
+### （6）在 manifest.json 文件里的 "app-plus" 同级别节点添加如下请求时间限制
+
+```
+"networkTimeout" : {
+    "request" : 2000    //这里设置的是 2 秒，具体根据你的服务器
+},
+```
+
+### （7）最后保存所有设置。启动后端以及数据库，使用 HbuilderX 运行到浏览器或者打包成App均可。
 
 ## MongoDB 数据库配置
+
+### ⚠️注意：请关注你的数据库安全。
 
 ### 1.宝塔面板配置（这里可以使用你自己熟悉的 mongodb 配置方式）
 
@@ -220,65 +231,31 @@
 
 ## 后端API配置
 
-### 后端使用 python+Flask 开发
- 
-### 0.docker 部署【推荐】
-
-#### （1）执行 `docker build -t 你的用户名/musicpy:1.0 .`
-
-#### （2）运行docker容器：`docker run -d -p 13874:13874 --name musicpy -m 900m --restart=always 你的用户名/musicpy:1.0`
-
-#### （3）记得放开 `13874` 端口（或者你自定义的端口）
+### 后端使用 eggjs+Typescript 开发
 
 ##### 直接部署
 <br>
 
-### 1.切换到 python 目录下
+### 1.切换到 backnode 目录下
 
-#### （1）执行 `pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt`
+```
+backnode
+    |_ docs
+        |_ README.md    //这是文档
+```
 
-#### （2）运行 `python main.py`
+#### （1）执行 `npm i && npm run ci`
 
-### 2.打开浏览器访问：`http://127.0.0.1:13874/search/稻香/?page=1`，如果出现 json 数据代表获取成功。
+#### （2）运行 `npm run start`
+
+### 2.打开浏览器访问：`http://127.0.0.1:7002/kuwo/search/searchMusicBykeyWord?key=稻香&pn=1&rn=12`，如果出现 json 数据代表获取成功。
 
 ### 3.API基本功能
 
 #### 基础地址：`http://你的（IP地址+端口）（或者是CDN域名）`
 
-#### （1）获取歌曲列表
-|接口地址|参数说明|
-|--------|----|
-|/search/[keyword]/?page=[num]|keyword就是歌曲名称(或者歌手名称)，num就是页数（一页默认大概15-20个左右）|
-
-##### 演示1(使用uniapp请求)
-
-```
-this.baseurl = http://你的（IP地址+端口）（或者是CDN域名）
-...
-uni.request({
-    url: this.baseurl + '/search/' + '稻香' + '/?page=' + '1',
-    method: 'GET',
-    success: (res) => {
-        console.log(res.data);
-    }
-});
-```
-##### 演示2（直接使用浏览器）
-
-`访问：http://你的（IP地址+端口）（或者是CDN域名）/search/花海/?page=1`
-
-#### （2）快速获取歌曲信息
-
-|接口地址|参数说明|
-|--------|----|
-|/fast_search/[path:url]|path:url就是获取到的歌曲链接|
-
-##### 演示：
-
-##### `访问：http://你的（IP地址+端口）（或者是CDN域名）/fast_search/https://xxx/thread-916.htm` 即可
-
-##### 说明：此接口用于程序内部，直接浏览器访问比较繁琐。
-
 ### 4.后端配置好后 http://你的（IP地址+端口）（或者是CDN域名），这个地址就是 `Vue.prototype.$pythonurl` 的地址。
+
+`注意：在部署过程中可能会出现外网无法访问的情况，可以使用 nginx 或者 内网穿透 反向代理来处理。`
 
 ### QQ交流群：643980281

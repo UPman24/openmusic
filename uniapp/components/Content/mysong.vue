@@ -28,7 +28,7 @@
 					<image @click="deleteMusic(index)" src="@/static/content/mysong/delete.png" style="width: 55rpx; height: 55rpx; margin-top: 30rpx; margin-left: 30rpx; opacity: 0.5;"></image>
 				</view>
 			</block>
-			<view style="width: 100%; height: 300rpx;"></view>
+			<view style="width: 100%; height: 500rpx;"></view>
 		</scroll-view>
 		<uni-popup type="center" ref="msg">
 			<view style="width: 100%;">
@@ -63,11 +63,11 @@
 			playThis(index){
 				this.$refs.msg.open('center');
 				uni.request({
-					url: this.$pythonurl + '/fast_search/' + this.Music[index].pre_url,
+					url: this.Music[index].pre_url,
 					method: 'GET',
 					success: (res) => {
-						let data = res.data;
-						this.Music[index] = data;
+						let data = res.data.data;
+						this.Music[index].url = data.url;
 						this.$musicInfo.author = this.Music[index].author;
 						this.$musicInfo.lrc = this.Music[index].lrc;
 						this.$musicInfo.pic = this.Music[index].pic;
@@ -96,6 +96,9 @@
 															var savedFilePath = req.savedFilePath;
 															this.$audio.src = savedFilePath;
 															this.$audio.play();
+															uni.$emit('popshows', {
+																ispop: true
+															})
 														}
 													});
 												},200)
@@ -109,6 +112,9 @@
 							this.$refs.msg.close();
 							this.$audio.src = this.$musicInfo.url;
 							this.$audio.play();
+							uni.$emit('popshows', {
+								ispop: true
+							})
 						}
 						// #endif
 						// #ifdef H5
@@ -132,9 +138,6 @@
 						// #ifdef APP
 						if(this.platform !== 'ios'){
 							setTimeout(()=>{
-								uni.$emit('popshows', {
-									ispop: true
-								})
 								uni.$emit('info', {
 									author: this.Music[index].author,
 									lrc: this.Music[index].lrc,
@@ -145,9 +148,6 @@
 								})
 							},500)
 						} else {
-							uni.$emit('popshows', {
-								ispop: true
-							})
 							uni.$emit('info', {
 								author: this.Music[index].author,
 								lrc: this.Music[index].lrc,

@@ -1,0 +1,48 @@
+{
+  "extends": ["eslint-config-egg/typescript","eslint-config-standard","eslint:recommended","plugin:jsdoc/recommended"],
+	"plugins": ["jsdoc"],
+	"rules": {
+		"comma-dangle":["error","always-multiline"],
+		"operator-linebreak":["error","before"],
+		"space-before-function-paren":[
+			"error",
+			{
+				"anonymous":"always",
+				"named":"always",
+				"asyncArrow":"always"
+			}
+		],
+		"linebreak-style":0,
+		"no-var-requires":0,
+		"no-return-assign":"off",
+		"default-case":"off",
+		"no-useless-constructor":"off",
+		"no-unused-vars":0,
+		"jsdoc/require-param-description":"off",
+		"jsdoc/check-tag-names": 0,
+		"jsdoc/no-undefined-types":0,
+		"jsdoc/valid-types":0,
+		"jsdoc/tag-lines":0,
+		"jsdoc/require-returns":0,
+		"jsdoc/check-param-names":0
+	},
+	"overrides":[
+	 {
+		"files":["*.ts"], 
+		"rules":{
+			"@typescript-eslint/no-unused-vars":0,
+			"@typescript-eslint/semi":0,
+			"@typescript-eslint/no-var-requires":0,
+			"@typescript-eslint/no-useless-constructor":0
+		}
+	}
+	],
+	"globals": {
+		"_":"readonly",
+		"app":true
+	},
+	"env": {
+		"node": true,
+		"es6": true
+	}
+}
