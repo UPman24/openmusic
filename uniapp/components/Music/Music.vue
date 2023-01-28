@@ -433,18 +433,18 @@
 		name:"Music",
 		data() {
 			return {
-				safearea: 0,
-				windowWidth: 0,
-				screenHeight: 0,
-				current: 0,
-				opc1: 1,
-				opc2: 0.6,
-				isplay: false,//默认没有播放
+				safearea: 0,//安全区距离
+				windowWidth: 0,//屏幕宽度
+				screenHeight: 0,//屏幕全屏高度
+				current: 0,// swiper 当前下标
+				opc1: 1,//	显示 “歌曲/歌词” 中的歌曲的明亮度（默认是不模糊）
+				opc2: 0.6,// 显示 “歌曲/歌词” 中的歌词的明亮度（默认是不模糊）
+				isplay: false,//是否播放（默认没有播放）
 				islike: false,//默认不喜欢
 				disableTouch: false,//默认没有触摸
-				percent: 0,
+				percent: 0,//歌曲当前进度百分比
 				endper: 0,
-				isToFlag: true,
+				isToFlag: true,//用于防止进度条闪屏
 				nowtime: '',
 				nowtimeX: '',
 				totaltime: '',
@@ -460,10 +460,11 @@
 				next2: false,
 				next3: false,
 				
-				baseurl: '',
+				baseurl: '',// 基础接口链接
 				
-				platform: "",
+				platform: "",//平台
 				
+				// 安卓端 背景模糊设置
 				params:{
 					width: uni.getSystemInfoSync().windowWidth + 'px',
 					height: uni.getSystemInfoSync().screenHeight + 'px',
@@ -472,22 +473,25 @@
 				},
 				
 				newtime: 0,
-				scrollIntoView: "",
+				scrollIntoView: "",// 滚动歌词的一个标志
 				
 				showLoadLrc: true,//默认展示加载中的歌词
 				showitem: false,
 				
 				iscreated: false,//控制退出界面循环不重复，节省性能
-				lrcshows: false,
+				lrcshows: false,//用来控制 swiper 的显示
 				
-				contentPage: 1,
-				content: [],//评论内容
+				contentPage: 1,//默认评论页数是 1 页
+				content: [],// 评论内容
 				cont: [],
 			};
 		},
 		components:{
 			playlist,more,helangBlur
 		},
+		/*
+		* 初始化数据
+		*/
 		created() {
 			this.iscreated = true;
 			this.contentPage = 1;
@@ -589,6 +593,15 @@
 			uni.$off('close_more');
 		},
 		methods:{
+			/**
+			* 功能说明：点击获取更多评论（步骤如下）
+			* 
+			* 1.打开加载中：this.$refs.msg2.open('center');
+			* 
+			* 2.找到歌曲信息，将评论页面参数 contentPage 加1：this.contentPage++;
+			* 
+			* 3.GET请求评论信息
+			*/
 			getMore(){
 				this.$refs.msg2.open('center');
 				let str = this.$musicInfo.pre_url;
