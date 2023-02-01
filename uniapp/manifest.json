@@ -2,8 +2,8 @@
     "name" : "小北云音乐",
     "appid" : "__UNI__1B981A4",
     "description" : "",
-    "versionName" : "1.1.7",
-    "versionCode" : 117,
+    "versionName" : "1.1.8",
+    "versionCode" : 118,
     "transformPx" : false,
     "networkTimeout" : {
         "request" : 6000

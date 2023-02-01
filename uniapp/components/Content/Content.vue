@@ -173,7 +173,7 @@
 				this.$refs.song.open("right");
 			},
 			playThis(index){
-				console.log(this.Music[index]);
+				// console.log(this.Music[index]);
 				this.$musicInfo.author = this.Music[index].author;
 				this.$musicInfo.lrc = this.Music[index].lrc;
 				this.$musicInfo.pic = this.Music[index].pic;
@@ -291,14 +291,16 @@
 					uni.$emit('popshows', {
 						ispop: true
 					})
-					uni.$emit('info', {
-						author: this.Music[index].author,
-						lrc: this.Music[index].lrc,
-						pic: this.Music[index].pic,
-						pre_url: this.Music[index].pre_url,
-						title: this.Music[index].title,
-						url: this.Music[index].url
-					})
+					setTimeout(()=>{
+						uni.$emit('info', {
+							author: this.Music[index].author,
+							lrc: this.Music[index].lrc,
+							pic: this.Music[index].pic,
+							pre_url: this.Music[index].pre_url,
+							title: this.Music[index].title,
+							url: this.Music[index].url
+						})
+					},200)
 				}
 				// #endif
 				// #ifdef H5

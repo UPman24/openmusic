@@ -148,6 +148,23 @@
 								})
 							},500)
 						} else {
+							setTimeout(()=>{
+								uni.$emit('info', {
+									author: this.Music[index].author,
+									lrc: this.Music[index].lrc,
+									pic: this.Music[index].pic,
+									pre_url: this.Music[index].pre_url,
+									title: this.Music[index].title,
+									url: this.Music[index].url
+								})
+							},200)
+						}
+						// #endif
+						// #ifdef H5
+						uni.$emit('popshows', {
+							ispop: true
+						})
+						setTimeout(()=>{
 							uni.$emit('info', {
 								author: this.Music[index].author,
 								lrc: this.Music[index].lrc,
@@ -156,20 +173,7 @@
 								title: this.Music[index].title,
 								url: this.Music[index].url
 							})
-						}
-						// #endif
-						// #ifdef H5
-						uni.$emit('popshows', {
-							ispop: true
-						})
-						uni.$emit('info', {
-							author: this.Music[index].author,
-							lrc: this.Music[index].lrc,
-							pic: this.Music[index].pic,
-							pre_url: this.Music[index].pre_url,
-							title: this.Music[index].title,
-							url: this.Music[index].url
-						})
+						},200)
 						// #endif
 					}
 				})
