@@ -33,7 +33,7 @@
         
     |_ backnode                     //用于获取歌曲信息
         |_ package.json             //依赖
-        |_ ...                      //执行 npm install && npm run ci && npm run start 能直接部署
+        |_ ...                      //执行 npm install && npm run start 能直接部署
         
     |_ uniapp                       //此文件可以直接导入 HbuilderX 中
 ```
