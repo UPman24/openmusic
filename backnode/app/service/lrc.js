@@ -299,9 +299,6 @@ const sortLrcArr = (arr) => {
         lrcSet.add(item.time)
         }
     }
-    if (lrcT.length > lrc.length * 0.3) {
-        throw new Error('failed')
-    }
     return {
         lrc,
         lrcT,
