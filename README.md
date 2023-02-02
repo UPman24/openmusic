@@ -45,6 +45,10 @@
 
 #### [版本：1.1.8]
 
+#### iOS下载地址：（限100人）
+
+#### [苹果手机下载地址](https://testflight.apple.com/join/RICp2M8W)
+
 #### 在线预览
 
 ###### 注意：只支持手机 H5版，不支持电脑网页版。
@@ -244,9 +248,11 @@ backnode
         |_ README.md    //这是文档
 ```
 
-#### （1）执行 `npm i`
+#### （1）执行 `npm install` 安装依赖
 
 #### （2）运行 `npm run start`
+
+#### （3）暂停 `npm run stop`
 
 ### 2.打开浏览器访问：`http://127.0.0.1:7002/kuwo/search/searchMusicBykeyWord?key=稻香&pn=1&rn=12`，如果出现 json 数据代表获取成功。
 
