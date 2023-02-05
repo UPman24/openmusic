@@ -1,38 +1,74 @@
 <template>
 	<view style="width: 100%;">
-		<view v-if="shows" style="display: flex; flex-direction: row;">
-			<!-- 封面 -->
-			<view style="width: 90%; height: 93rpx; margin-left: 35rpx;">
-				<image @click="touchTabbar" mode="aspectFill" :src="pic" style="width: 93rpx; height: 93rpx; border-radius: 10rpx; position: absolute; z-index: 123;"></image>
-				<image @click="touchTabbar" src="@/static/tabbar/bfq.png" style="width: 80rpx; background-color: #3e4044; height: 80rpx; border-radius: 98rpx; position: absolute; margin-left: 32rpx; margin-top: 8rpx; z-index: 122;"></image>
-				<!-- 显示歌词条部分 -->
-				<view style="width: 87%; height: 83rpx; background-color: #3e4044; margin-top: 10rpx; margin-left: 90rpx; border-top-right-radius: 50rpx; border-bottom-right-radius: 50rpx; display: flex; flex-direction: row;">
-					<view style="width: 1px; height: 0.1px;"></view>
-					<view @click="touchTabbar" style="width: 80%; height: 55rpx; display: flex; flex-direction: row; margin-top: 16rpx;overflow: hidden; margin-left: 30rpx;">
-						<!-- 中间内容 -->
-						<view style="width: 100%; height: 100%; mask-image: linear-gradient(to left, transparent, transparent 0%, black 10%);">
-							<view style="width: 100%; height: 100%; mask-image: linear-gradient(to right, transparent, transparent 0%, black 10%);">
-								<swiper style="width: 100%; height: 100%;" :circular="true" :autoplay="false" :indicator-dots="false" @change="change">
-									<swiper-item v-for="(li,index) in swiperList" :key="index">
-										<view style="width: 100%; height: 100%;">
-											<view style="font-size: 15px; padding-top: 6rpx; text-align: center; color: #FFFFFF; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1;">
-												{{li.title}} ~ {{li.author}}
+		<block v-if="platform === 'PC'">
+			<view v-if="shows" style="display: flex; flex-direction: row;">
+				<!-- 封面 -->
+				<view style="width: 90%; height: 46.5px; margin-left: 17.5px;">
+					<image @click="touchTabbar" mode="aspectFill" :src="pic" style="width: 46.5px; height: 46.5px; border-radius: 5px; position: absolute; z-index: 123;"></image>
+					<image @click="touchTabbar" src="@/static/tabbar/bfq.png" style="width: 40px; background-color: #3e4044; height: 40px; border-radius: 49px; position: absolute; margin-left: 16px; margin-top: 4px; z-index: 122;"></image>
+					<!-- 显示歌词条部分 -->
+					<view style="width: 87%; height: 41.5px; background-color: #3e4044; margin-top: 5px; margin-left: 45px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; display: flex; flex-direction: row;">
+						<view style="width: 1px; height: 0.1px;"></view>
+						<view @click="touchTabbar" style="width: 80%; height: 22.5px; display: flex; flex-direction: row; margin-top: 8px; overflow: hidden; margin-left: 15px;">
+							<!-- 中间内容 -->
+							<view style="width: 100%; height: 100%; mask-image: linear-gradient(to left, transparent, transparent 0%, black 10%);">
+								<view style="width: 100%; height: 100%; mask-image: linear-gradient(to right, transparent, transparent 0%, black 10%);">
+									<swiper style="width: 100%; height: 100%;" :circular="true" :autoplay="false" :indicator-dots="false" @change="change">
+										<swiper-item v-for="(li,index) in swiperList" :key="index">
+											<view style="width: 100%; height: 100%;">
+												<view style="font-size: 15px; padding-top: 3px; text-align: center; color: #FFFFFF; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1;">
+													{{li.title}} ~ {{li.author}}
+												</view>
 											</view>
-										</view>
-									</swiper-item>
-								</swiper>
+										</swiper-item>
+									</swiper>
+								</view>
 							</view>
 						</view>
-					</view>
-					<view style="width: 50rpx; height: 50rpx; display: flex; flex-direction: row; margin-top: 18rpx; margin-left: 16rpx; border-radius: 90rpx;">
-						<!-- 进度小圆圈 -->
-						<circle-progress-bar v-if="platform === 'ios'" :border_width="3" :pro="pro" :animate="true" :start="0" border_color="#FFFFFF" border_back_color="transparent" background="transparent" unit="px" :size="26"></circle-progress-bar>
-						<image v-if="showChange" @click="to_pause" src="@/static/tabbar/play.png" style="width: 59rpx; height: 58rpx; margin-top: -4rpx; margin-left: -4rpx; position: absolute; z-index: 125;"></image>
-						<image v-if="!showChange" @click="to_play" src="@/static/tabbar/pause.png" style="width: 54rpx; height: 53rpx; margin-top: -1rpx; margin-left: -2rpx; position: absolute; z-index: 125;"></image>
+						<view style="width: 25px; height: 25px; display: flex; flex-direction: row; margin-top: 9px; margin-left: 8px; border-radius: 45px;">
+							<!-- 进度小圆圈 -->
+							<image v-if="showChange" @click="to_pause" src="@/static/tabbar/play.png" style="width: 29.5px; height: 29px; margin-top: -2px; margin-left: -2px; position: absolute; z-index: 125;"></image>
+							<image v-if="!showChange" @click="to_play" src="@/static/tabbar/pause.png" style="width: 27px; height: 26.5px; margin-top: -0.5px; margin-left: -1px; position: absolute; z-index: 125;"></image>
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
+		</block>
+		<block v-if="platform !== 'PC'">
+			<view v-if="shows" style="display: flex; flex-direction: row;">
+				<!-- 封面 -->
+				<view style="width: 90%; height: 93rpx; margin-left: 35rpx;">
+					<image @click="touchTabbar" mode="aspectFill" :src="pic" style="width: 93rpx; height: 93rpx; border-radius: 10rpx; position: absolute; z-index: 123;"></image>
+					<image @click="touchTabbar" src="@/static/tabbar/bfq.png" style="width: 80rpx; background-color: #3e4044; height: 80rpx; border-radius: 98rpx; position: absolute; margin-left: 32rpx; margin-top: 8rpx; z-index: 122;"></image>
+					<!-- 显示歌词条部分 -->
+					<view style="width: 87%; height: 83rpx; background-color: #3e4044; margin-top: 10rpx; margin-left: 90rpx; border-top-right-radius: 50rpx; border-bottom-right-radius: 50rpx; display: flex; flex-direction: row;">
+						<view style="width: 1px; height: 0.1px;"></view>
+						<view @click="touchTabbar" style="width: 80%; height: 55rpx; display: flex; flex-direction: row; margin-top: 16rpx;overflow: hidden; margin-left: 30rpx;">
+							<!-- 中间内容 -->
+							<view style="width: 100%; height: 100%; mask-image: linear-gradient(to left, transparent, transparent 0%, black 10%);">
+								<view style="width: 100%; height: 100%; mask-image: linear-gradient(to right, transparent, transparent 0%, black 10%);">
+									<swiper style="width: 100%; height: 100%;" :circular="true" :autoplay="false" :indicator-dots="false" @change="change">
+										<swiper-item v-for="(li,index) in swiperList" :key="index">
+											<view style="width: 100%; height: 100%;">
+												<view style="font-size: 15px; padding-top: 6rpx; text-align: center; color: #FFFFFF; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1;">
+													{{li.title}} ~ {{li.author}}
+												</view>
+											</view>
+										</swiper-item>
+									</swiper>
+								</view>
+							</view>
+						</view>
+						<view style="width: 50rpx; height: 50rpx; display: flex; flex-direction: row; margin-top: 18rpx; margin-left: 16rpx; border-radius: 90rpx;">
+							<!-- 进度小圆圈 -->
+							<circle-progress-bar v-if="platform === 'ios'" :border_width="3" :pro="pro" :animate="true" :start="0" border_color="#FFFFFF" border_back_color="transparent" background="transparent" unit="px" :size="26"></circle-progress-bar>
+							<image v-if="showChange" @click="to_pause" src="@/static/tabbar/play.png" style="width: 59rpx; height: 58rpx; margin-top: -4rpx; margin-left: -4rpx; position: absolute; z-index: 125;"></image>
+							<image v-if="!showChange" @click="to_play" src="@/static/tabbar/pause.png" style="width: 54rpx; height: 53rpx; margin-top: -1rpx; margin-left: -2rpx; position: absolute; z-index: 125;"></image>
+						</view>
+					</view>
+				</view>
+			</view>
+		</block>
 		<uni-popup type="center" ref="msgs">
 			<view style="width: 100%;">
 				<view style="font-size: 14px; color: #FFFFFF;">请稍等...</view>
@@ -71,7 +107,12 @@
 			} else {
 				this.showChange = false;
 			}
-			this.platform = uni.getSystemInfoSync().platform;
+			let platform = uni.getSystemInfoSync().platform;
+			if(platform !== 'ios' && platform !== 'android'){
+				this.platform = "PC";
+			} else {
+				this.platform = uni.getSystemInfoSync().platform;
+			}
 			if(uni.getStorageSync('music').length !== 0){
 				let list = uni.getStorageSync('music');
 				let List = [];

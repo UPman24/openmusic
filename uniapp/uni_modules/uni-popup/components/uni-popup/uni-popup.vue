@@ -357,7 +357,7 @@ export default {
 .uni-popup {
 	position: fixed;
 	/* #ifndef APP-NVUE */
-	z-index: 10000;
+	z-index: 100000;
 	/* #endif */
 	&.top,
 	&.left,
@@ -394,7 +394,7 @@ export default {
 
 .fixforpc-z-index {
 	/* #ifndef APP-NVUE */
-	z-index: 999;
+	z-index: 9999;
 	/* #endif */
 }
 

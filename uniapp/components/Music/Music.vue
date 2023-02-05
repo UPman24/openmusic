@@ -3,399 +3,540 @@
 		<!-- 背景 -->
 		<image v-if="platform === 'ios'" :src="pic" mode="aspectFill" class="img-back" :style="'height: '+ screenHeight +'px;'"></image>
 		<helang-blur v-if="platform !== 'ios'" :params="params" class="helan" style="position: absolute; z-index: -1;"></helang-blur>
-		<!-- #ifdef APP -->
-		<view style="width: 100%; height: 80rpx; background-color: transparent;"></view>
-		<!-- 1.顶部菜单 -->
-		<view style="display: flex; flex-direction: row;">
-			<image @click="close" src="@/static/music/low.png" style="width: 50rpx; height: 44rpx; margin-left: 60rpx; margin-top: 40rpx;"></image>
-			<view style="display: flex; flex-direction: row; margin-left: 25%; margin-top: 35rpx;">
-				<view @click="gequ" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
-				<view style="font-size: 14px; color: #FFFFFF; opacity: 0.5;">｜</view>
-				<view @click="geci" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
-			</view>
-		</view>
-		<!-- 2.内容部分 -->
-		<swiper :style="'width: 100%; height: '+ (screenHeight*0.85) +'px; position: absolute;'" :current="current" @change="swithChange" :disable-touch="disableTouch">
-			<swiper-item>
-				<scroll-view v-if="platform !== 'ios'" :style="'width: 100%; height: '+ (screenHeight*0.85) +'px; margin-top: 40rpx; mask-image: linear-gradient(to top, transparent, transparent 3%, black 10%);'" :scroll-y="true">
-					<view style="width: 100%; height: 100%;">
-						<!-- 图片 -->
-						<view style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
-							<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 20rpx; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
-						</view>
-						<!-- 歌手信息 -->
-						<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
-							<view style="display: flex; flex-direction: column;">
-								<view style="width: 500rpx; font-size: 28px; font-weight: bold; color: #fefcff; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-									{{title}}
-								</view>
-								<view style="width: 500rpx; font-size: 18px; font-weight: bold; color: #fefcff; margin-top: 10rpx; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-									{{author}}
-								</view>
+		<block v-if="platform === 'PC'">
+			<image @click="close" src="@/static/music/low.png" style="width: 50rpx; height: 22px; margin-left: 30px; margin-top: 50px;"></image>
+			<view style="width: 1400px; display: flex; flex-direction: row;">
+				<view style="width: 450px; padding-left: 65px;">
+					<!-- 图片 -->
+					<view style="width: 300px; height: 300px; margin-top: 5px; margin-left: 6.5%;">
+						<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 10px; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
+					</view>
+					<!-- 歌手信息 -->
+					<view style="display: flex; flex-direction: row; margin-top: 30px; margin-left: 6.5%;">
+						<view style="display: flex; flex-direction: column;">
+							<view style="width: 230px; font-size: 28px; font-weight: bold; color: #fefcff; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+								{{title}}
 							</view>
-							<!-- 爱心 -->
-							<view style="margin-left: 65rpx; display: flex; flex-direction: column;">
-								<image v-if="!islike" @click="like" src="@/static/music/no_like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
-								<image v-if="islike" @click="like" src="@/static/music/like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
-								<view style="font-size: 16px; color: #FFFFFF; text-align: center; margin-top: 15rpx; opacity: 0.9;">喜欢</view>
+							<view style="width: 230px; font-size: 18px; font-weight: bold; color: #fefcff; margin-top: 5px; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+								{{author}}
 							</view>
 						</view>
-						<!-- 信息栏 -->
-						<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
-							<!-- 下载 -->
-							<view @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
-								<image src="@/static/music/download.png" style="width: 65rpx; height: 65rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
-							</view>
-							<!-- 歌曲循环设置 -->
-							<view @click="nextCircle" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
-								<image v-if="next1" src="@/static/music/one_circle.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<image v-if="next2" src="@/static/music/luan_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<image v-if="next3" src="@/static/music/next_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<view v-if="next1" style="font-size: 14px; color: #FFFFFF; text-align: center;">单曲循环</view>
-								<view v-if="next2" style="font-size: 14px; color: #FFFFFF; text-align: center;">随机播放</view>
-								<view v-if="next3" style="font-size: 14px; color: #FFFFFF; text-align: center;">顺序播放</view>
-							</view>
-							<!-- 播放列表 -->
-							<view @click="toPlaylist" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%; margin-top: 9rpx;">
-								<image src="@/static/music/play_list.png" style="width: 60rpx; height: 60rpx; margin-left: 18rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">播放列表</view>
-							</view>
-							<!-- 更多 -->
-							<view @click="toMore" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
-								<image src="@/static/music/more.png" style="width: 68rpx; height: 68rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">更多</view>
-							</view>
-						</view>
-						<!-- 进度条 -->
-						<view @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" style="display: flex; flex-direction: column; height: 160rpx;">
-							<!-- 底座进度条 -->
-							<view style="width: 85%; margin-top: 70rpx; height: 5.8rpx; border-radius: 20rpx; margin-left: 6.5%; background-color: #FFFFFF; opacity: 0.5;"></view>
-							<!-- 未触摸 -->
-							<view v-if="!disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
-								<!-- 1.白底 没有触摸的时候的进度条 -->
-								<view :style="'width: '+ endper +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
-								<!-- 2.白底 圆圈的小点 -->
-								<view :style="'margin-left: '+ (endper - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
-							</view>
-							<!-- 触摸 -->
-							<view v-if="disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
-								<view :style="'width: '+ percent +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
-								<view :style="'margin-left: '+ (percent - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
-							</view>
-							<!-- 不触摸 -->
-							<view v-if="!disableTouch" style="display: flex; flex-direction: row;">
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtime}}</view>
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
-							</view>
-							<!-- 触摸 -->
-							<view v-if="disableTouch" style="display: flex; flex-direction: row;">
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtimeX}}</view>
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
-							</view>
-						</view>
-						<!-- 播放器 -->
-						<view style="display: flex; flex-direction: row; margin-top: 10rpx;">
-							<image @click="beforeMusic" src="@/static/music/before.png" style="width: 100rpx; height: 100rpx; margin-left: 14%;"></image>
-							<image v-if="isplay" @click="plays" src="@/static/music/play.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
-							<image v-if="!isplay" @click="plays" src="@/static/music/pause.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
-							<image @click="nextMusic" src="@/static/music/next.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+						<!-- 爱心 -->
+						<view style="margin-left: 32.5px; display: flex; flex-direction: column;">
+							<image v-if="!islike" @click="like" src="@/static/music/no_like.png" style="width: 40px; height: 40px; opacity: 0.8;"></image>
+							<image v-if="islike" @click="like" src="@/static/music/like.png" style="width: 40px; height: 40px; opacity: 0.8;"></image>
+							<view style="font-size: 16px; color: #FFFFFF; text-align: center; margin-top: 7.5px; opacity: 0.9;">喜欢</view>
 						</view>
 					</view>
-					<view style="width: 100%; height: 200rpx;"></view>
-				</scroll-view>
-				<block v-if="platform === 'ios'">
-					<view style="width: 100%; height: 100%;">
-						<!-- 图片 -->
-						<view style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
-							<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 20rpx; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
+					<!-- 信息栏 -->
+					<view style="display: flex; flex-direction: row; margin-top: 30px; margin-left: 6.5%;">
+						<!-- 下载 -->
+						<view @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 3.5px;">
+							<image src="@/static/music/download.png" style="width: 32.5px; height: 32.5px;"></image>
+							<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
 						</view>
-						<!-- 歌手信息 -->
-						<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
-							<view style="display: flex; flex-direction: column;">
-								<view style="width: 500rpx; font-size: 28px; font-weight: bold; color: #fefcff; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-									{{title}}
-								</view>
-								<view style="width: 500rpx; font-size: 18px; font-weight: bold; color: #fefcff; margin-top: 10rpx; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-									{{author}}
-								</view>
-							</view>
-							<!-- 爱心 -->
-							<view style="margin-left: 65rpx; display: flex; flex-direction: column;">
-								<image v-if="!islike" @click="like" src="@/static/music/no_like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
-								<image v-if="islike" @click="like" src="@/static/music/like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
-								<view style="font-size: 16px; color: #FFFFFF; text-align: center; margin-top: 15rpx; opacity: 0.9;">喜欢</view>
-							</view>
+						<!-- 歌曲循环设置 -->
+						<view @click="nextCircle" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 40px;">
+							<image v-if="next1" src="@/static/music/one_circle.png" style="width: 35px; height: 35px; margin-left: 7.5px;"></image>
+							<image v-if="next2" src="@/static/music/luan_play.png" style="width: 35px; height: 35px; margin-left: 7.5px;"></image>
+							<image v-if="next3" src="@/static/music/next_play.png" style="width: 35px; height: 35px; margin-left: 7.5px;"></image>
+							<view v-if="next1" style="font-size: 14px; color: #FFFFFF; text-align: center;">单曲循环</view>
+							<view v-if="next2" style="font-size: 14px; color: #FFFFFF; text-align: center;">随机播放</view>
+							<view v-if="next3" style="font-size: 14px; color: #FFFFFF; text-align: center;">顺序播放</view>
 						</view>
-						<!-- 信息栏 -->
-						<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
-							<!-- 下载 -->
-							<view @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
-								<image src="@/static/music/download.png" style="width: 65rpx; height: 65rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
-							</view>
-							<!-- 歌曲循环设置 -->
-							<view @click="nextCircle" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
-								<image v-if="next1" src="@/static/music/one_circle.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<image v-if="next2" src="@/static/music/luan_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<image v-if="next3" src="@/static/music/next_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<view v-if="next1" style="font-size: 14px; color: #FFFFFF; text-align: center;">单曲循环</view>
-								<view v-if="next2" style="font-size: 14px; color: #FFFFFF; text-align: center;">随机播放</view>
-								<view v-if="next3" style="font-size: 14px; color: #FFFFFF; text-align: center;">顺序播放</view>
-							</view>
-							<!-- 播放列表 -->
-							<view @click="toPlaylist" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%; margin-top: 9rpx;">
-								<image src="@/static/music/play_list.png" style="width: 60rpx; height: 60rpx; margin-left: 18rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">播放列表</view>
-							</view>
-							<!-- 更多 -->
-							<view @click="toMore" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
-								<image src="@/static/music/more.png" style="width: 68rpx; height: 68rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">更多</view>
-							</view>
+						<!-- 播放列表 -->
+						<view @click="toPlaylist" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 40px; margin-top: 4.5px;">
+							<image src="@/static/music/play_list.png" style="width: 30px; height: 30px; margin-left: 9px;"></image>
+							<view style="font-size: 14px; color: #FFFFFF; text-align: center;">播放列表</view>
 						</view>
-						<!-- 进度条 -->
-						<view @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" style="display: flex; flex-direction: column; height: 160rpx;">
-							<!-- 底座进度条 -->
-							<view style="width: 85%; margin-top: 70rpx; height: 5.8rpx; border-radius: 20rpx; margin-left: 6.5%; background-color: #FFFFFF; opacity: 0.5;"></view>
-							<!-- 未触摸 -->
-							<view v-if="!disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
-								<!-- 1.白底 没有触摸的时候的进度条 -->
-								<view :style="'width: '+ endper +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
-								<!-- 2.白底 圆圈的小点 -->
-								<view :style="'margin-left: '+ (endper - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
-							</view>
-							<!-- 触摸 -->
-							<view v-if="disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
-								<view :style="'width: '+ percent +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
-								<view :style="'margin-left: '+ (percent - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
-							</view>
-							<!-- 不触摸 -->
-							<view v-if="!disableTouch" style="display: flex; flex-direction: row;">
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtime}}</view>
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
-							</view>
-							<!-- 触摸 -->
-							<view v-if="disableTouch" style="display: flex; flex-direction: row;">
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtimeX}}</view>
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
-							</view>
-						</view>
-						<!-- 播放器 -->
-						<view style="display: flex; flex-direction: row; margin-top: 10rpx;">
-							<image @click="beforeMusic" src="@/static/music/before.png" style="width: 100rpx; height: 100rpx; margin-left: 14%;"></image>
-							<image v-if="isplay" @click="plays" src="@/static/music/play.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
-							<image v-if="!isplay" @click="plays" src="@/static/music/pause.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
-							<image @click="nextMusic" src="@/static/music/next.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+						<!-- 更多 -->
+						<view @click="toMore" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 40px;">
+							<image src="@/static/music/more.png" style="width: 34px; height: 34px;"></image>
+							<view style="font-size: 14px; color: #FFFFFF; text-align: center;">更多</view>
 						</view>
 					</view>
-				</block>
-			</swiper-item>
-			<swiper-item>
-				<!-- 歌词 -->
-				<view style="width: 100%; height: 100%;" v-show="showitem">
-					<view style="width: 100%; opacity: 0;">.</view>
-					<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
-					<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
-					<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to bottom, transparent, transparent 0%, black 10%);">
-						<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to top, transparent, transparent 10%, black 35%);">
-							<scroll-view v-show="showLoadLrc===true" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-into-view="scrollIntoView" :scroll-y="true" :scroll-with-animation="true">
-								<view style="width: 100%; height: 150px;"></view>
-								<block v-for="(list,index) in lrc" :key="index">
-									<view :id="list.place" style="width: 100%; height: 1px;"></view>
-									<view @click="toJump(index)" :style="'width: 85%; font-size: 26px; font-weight: bold; color: #FFFFFF; margin-top: 80rpx; opacity: 0.4; transform: translateY(150px); word-wrap:break-word;'+list.animations" :class="(index>Number(scrollIntoView.split('place')[1])&&(index-Number(scrollIntoView.split('place')[1]))<9)?'anima-'+(index-Number(scrollIntoView.split('place')[1])+1):''">
-										{{list.lineLyric}}
-									</view>
-								</block>
-								<view style="width: 100%; height: 600rpx;"></view>
-							</scroll-view>
-							<scroll-view v-show="showLoadLrc===false" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-y="true" :scroll-with-animation="true">
-								<view style="width: 100%; height: 20px;"></view>
-								<block v-for="(list,index) in content">
-									<view style="width: 85%; margin-top: 60rpx; display: flex; flex-direction: row;">
-										<image v-if="list.u_pic !== ''" :src="list.u_pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
-										<image v-if="list.u_pic.length == 0" src="@/static/music.png" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
-										<view style="width: 80%; margin-left: 30rpx; margin-top: 10rpx; display: flex; flex-direction: column;">
-											<view style="width: 100%; font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: 0.6; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-												{{list.u_name}}
-											</view>
-											<view style="width: 95%; font-size: 17px; font-weight: bold; color: #FFFFFF; opacity: 0.98;">
-												{{list.msg}}
+					<!-- 进度条 -->
+					<view @mousedown="touchstartX" @mousemove="touchmoveX" @mouseup="touchendX" style="display: flex; flex-direction: column; height: 80px; width: 300px; margin-left: 6.5%;">
+						<!-- 底座进度条 -->
+						<view style="width: 300px; margin-top: 35px; height: 2.9px; border-radius: 10px; background-color: #FFFFFF; opacity: 0.5;"></view>
+						<!-- 未触摸 -->
+						<view v-if="!disableTouch" style="width: 300px; position: absolute; z-index: 1003; margin-top: 35px;">
+							<!-- 1.白底 没有触摸的时候的进度条 -->
+							<view :style="'width: '+ endper +'%; height: 2.9px; border-radius: 10px; background-color: #FFFFFF;'"></view>
+							<!-- 2.白底 圆圈的小点 -->
+							<view :style="'margin-left: '+ (endper - 1) +'%; width: 8px; height: 8px; margin-top: -5px; background-color: #FFFFFF; border-radius: 15px; position: absolute; z-index: 1004;'"></view>
+						</view>
+						<!-- 触摸 -->
+						<view v-if="disableTouch" style="width: 300px; position: absolute; z-index: 1003; margin-top: 35px;">
+							<view :style="'width: '+ percent +'%; height: 2.9px; border-radius: 10px; background-color: #FFFFFF;'"></view>
+							<view :style="'margin-left: '+ (percent - 1) +'%; width: 8px; height: 8px; margin-top: -5px; background-color: #FFFFFF; border-radius: 15px; position: absolute; z-index: 1004;'"></view>
+						</view>
+						<!-- 不触摸 -->
+						<view v-if="!disableTouch" style="display: flex; flex-direction: row;">
+							<view style="font-size: 13px; color: #FFFFFF; position: absolute; margin-top: 10px;">{{nowtime}}</view>
+							<view style="font-size: 13px; color: #FFFFFF; position: absolute; margin-left: 265px; margin-top: 10px;">{{totaltime}}</view>
+						</view>
+						<!-- 触摸 -->
+						<view v-if="disableTouch" style="display: flex; flex-direction: row;">
+							<view style="font-size: 13px; color: #FFFFFF; position: absolute; margin-top: 10px;">{{nowtimeX}}</view>
+							<view style="font-size: 13px; color: #FFFFFF; position: absolute; margin-left: 265px; margin-top: 10px;">{{totaltime}}</view>
+						</view>
+					</view>
+					<!-- 播放器 -->
+					<view style="display: flex; flex-direction: row; margin-top: 5px;">
+						<image @click="beforeMusic" src="@/static/music/before.png" style="width: 45px; height: 45px; margin-left: 7.5%;"></image>
+						<image v-if="isplay" @click="plays" src="@/static/music/play.png" style="width: 45px; height: 45px; margin-left: 65px;"></image>
+						<image v-if="!isplay" @click="plays" src="@/static/music/pause.png" style="width: 45px; height: 45px; margin-left: 65px;"></image>
+						<image @click="nextMusic" src="@/static/music/next.png" style="width: 45px; height: 45px; margin-left: 65px;"></image>
+					</view>
+				</view>
+				<view :style="'width: 70%; height: '+ (windowHeight*0.85) +'px;'">
+					<!-- 歌词 -->
+					<view style="width: 100%; height: 100%;">
+						<view style="width: 100%; opacity: 0;">.</view>
+						<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 50px; height: 50px; position: absolute; z-index: 1009; bottom: 20px; right: 28px; opacity: 0.3;"></image>
+						<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 50px; height: 50px; position: absolute; z-index: 1009; bottom: 20px; right: 28px; opacity: 0.3;"></image>
+						<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to bottom, transparent, transparent 0%, black 10%);">
+							<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to top, transparent, transparent 10%, black 35%);">
+								<scroll-view v-show="showLoadLrc===true" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-into-view="scrollIntoView" :scroll-y="true" :scroll-with-animation="true">
+									<view style="width: 100%; height: 150px;"></view>
+									<block v-for="(list,index) in lrc" :key="index">
+										<view :id="list.place" style="width: 100%; height: 1px;"></view>
+										<view @click="toJump(index)" :style="'width: 85%; font-size: 26px; font-weight: bold; color: #FFFFFF; margin-top: 50px; opacity: 0.4; transform: translateY(150px); word-wrap:break-word;'+list.animations" :class="(index>Number(scrollIntoView.split('place')[1])&&(index-Number(scrollIntoView.split('place')[1]))<9)?'anima-'+(index-Number(scrollIntoView.split('place')[1])+1):''">
+											{{list.lineLyric}}
+										</view>
+									</block>
+									<view style="width: 100%; height: 600rpx;"></view>
+								</scroll-view>
+								<scroll-view v-show="showLoadLrc===false" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-y="true" :scroll-with-animation="true">
+									<view style="width: 100%; height: 20px;"></view>
+									<block v-for="(list,index) in content">
+										<view style="width: 85%; margin-top: 60rpx; display: flex; flex-direction: row;">
+											<image v-if="list.u_pic !== ''" :src="list.u_pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+											<image v-if="list.u_pic.length == 0" src="@/static/music.png" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+											<view style="width: 80%; margin-left: 30rpx; margin-top: 10rpx; display: flex; flex-direction: column;">
+												<view style="width: 100%; font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: 0.6; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+													{{list.u_name}}
+												</view>
+												<view style="width: 95%; font-size: 17px; font-weight: bold; color: #FFFFFF; opacity: 0.98;">
+													{{list.msg}}
+												</view>
 											</view>
 										</view>
-									</view>
-								</block>
-								<block v-if="content.length == 0">
-									<view style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
-										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">没有评论</view>
-									</view>
-								</block>
-								<block v-if="content.length !== 0">
-									<view @click="getMore" style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
-										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">获取更多</view>
-									</view>
-								</block>
-								<view style="width: 100%; height: 600rpx;"></view>
-							</scroll-view>
+									</block>
+									<block v-if="content.length == 0">
+										<view style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+											<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">没有评论</view>
+										</view>
+									</block>
+									<block v-if="content.length !== 0">
+										<view @click="getMore" style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+											<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">获取更多</view>
+										</view>
+									</block>
+									<view style="width: 100%; height: 600rpx;"></view>
+								</scroll-view>
+							</view>
 						</view>
 					</view>
 				</view>
-			</swiper-item>
-		</swiper>
-		<!-- #endif -->
-		<!-- #ifdef H5 -->
-		<!-- 1.顶部菜单 -->
-		<view style="display: flex; flex-direction: row;">
-			<image @click="close" src="@/static/music/low.png" style="width: 50rpx; height: 44rpx; margin-left: 60rpx; margin-top: 40rpx;"></image>
-			<view style="display: flex; flex-direction: row; margin-left: 25%; margin-top: 35rpx;">
-				<view @click="gequ" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
-				<view style="font-size: 14px; color: #FFFFFF; opacity: 0.5;">｜</view>
-				<view @click="geci" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
 			</view>
-		</view>
-		<!-- 2.内容部分 -->
-		<swiper :style="'width: 100%; height: '+ (screenHeight*0.72) +'px; position: absolute; margin-top: 30rpx;'" :current="current" @change="swithChange" :disable-touch="disableTouch">
-			<swiper-item>
-				<scroll-view :style="'width: 100%; height: '+ (screenHeight*0.74) +'px; mask-image: linear-gradient(to top, transparent, transparent 3%, black 10%);'" :scroll-y="true">
-					<view style="width: 100%; height: 100%;">
-						<!-- 图片 -->
-						<view id="a1" style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
-							<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 20rpx; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
-						</view>
-						<!-- 歌手信息 -->
-						<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
-							<view style="display: flex; flex-direction: column;">
-								<view style="width: 500rpx; font-size: 28px; font-weight: bold; color: #fefcff; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-									{{title}}
-								</view>
-								<view style="width: 500rpx; font-size: 18px; font-weight: bold; color: #fefcff; margin-top: 10rpx; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-									{{author}}
-								</view>
+		</block>
+		<block v-if="platform !== 'PC'">
+			<!-- #ifdef APP -->
+			<view style="width: 100%; height: 80rpx; background-color: transparent;"></view>
+			<!-- 1.顶部菜单 -->
+			<view style="display: flex; flex-direction: row;">
+				<image @click="close" src="@/static/music/low.png" style="width: 50rpx; height: 44rpx; margin-left: 60rpx; margin-top: 40rpx;"></image>
+				<view style="display: flex; flex-direction: row; margin-left: 25%; margin-top: 35rpx;">
+					<view @click="gequ" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
+					<view style="font-size: 14px; color: #FFFFFF; opacity: 0.5;">｜</view>
+					<view @click="geci" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
+				</view>
+			</view>
+			<!-- 2.内容部分 -->
+			<swiper :style="'width: 100%; height: '+ (screenHeight*0.85) +'px; position: absolute;'" :current="current" @change="swithChange" :disable-touch="disableTouch">
+				<swiper-item>
+					<scroll-view v-if="platform !== 'ios'" :style="'width: 100%; height: '+ (screenHeight*0.85) +'px; margin-top: 40rpx; mask-image: linear-gradient(to top, transparent, transparent 3%, black 10%);'" :scroll-y="true">
+						<view style="width: 100%; height: 100%;">
+							<!-- 图片 -->
+							<view style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
+								<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 20rpx; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
 							</view>
-							<!-- 爱心 -->
-							<view style="margin-left: 65rpx; display: flex; flex-direction: column;">
-								<image v-if="!islike" @click="like" src="@/static/music/no_like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
-								<image v-if="islike" @click="like" src="@/static/music/like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
-								<view style="font-size: 16px; color: #FFFFFF; text-align: center; margin-top: 15rpx; opacity: 0.9;">喜欢</view>
-							</view>
-						</view>
-						<!-- 信息栏 -->
-						<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
-							<!-- 下载 -->
-							<view id="a2" @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
-								<image src="@/static/music/download.png" style="width: 65rpx; height: 65rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
-							</view>
-							<!-- 歌曲循环设置 -->
-							<view @click="nextCircle" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
-								<image v-if="next1" src="@/static/music/one_circle.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<image v-if="next2" src="@/static/music/luan_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<image v-if="next3" src="@/static/music/next_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
-								<view v-if="next1" style="font-size: 14px; color: #FFFFFF; text-align: center;">单曲循环</view>
-								<view v-if="next2" style="font-size: 14px; color: #FFFFFF; text-align: center;">随机播放</view>
-								<view v-if="next3" style="font-size: 14px; color: #FFFFFF; text-align: center;">顺序播放</view>
-							</view>
-							<!-- 播放列表 -->
-							<view @click="toPlaylist" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%; margin-top: 9rpx;">
-								<image src="@/static/music/play_list.png" style="width: 60rpx; height: 60rpx; margin-left: 18rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">播放列表</view>
-							</view>
-							<!-- 更多 -->
-							<view @click="toMore" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
-								<image src="@/static/music/more.png" style="width: 68rpx; height: 68rpx;"></image>
-								<view style="font-size: 14px; color: #FFFFFF; text-align: center;">更多</view>
-							</view>
-						</view>
-						<!-- 进度条 -->
-						<view @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" style="display: flex; flex-direction: column; height: 160rpx;">
-							<!-- 底座进度条 -->
-							<view style="width: 85%; margin-top: 70rpx; height: 5.8rpx; border-radius: 20rpx; margin-left: 6.5%; background-color: #FFFFFF; opacity: 0.5;"></view>
-							<!-- 未触摸 -->
-							<view v-if="!disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
-								<!-- 1.白底 没有触摸的时候的进度条 -->
-								<view :style="'width: '+ endper +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
-								<!-- 2.白底 圆圈的小点 -->
-								<view :style="'margin-left: '+ (endper - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
-							</view>
-							<!-- 触摸 -->
-							<view v-if="disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
-								<view :style="'width: '+ percent +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
-								<view :style="'margin-left: '+ (percent - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
-							</view>
-							<!-- 不触摸 -->
-							<view v-if="!disableTouch" style="display: flex; flex-direction: row;">
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtime}}</view>
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
-							</view>
-							<!-- 触摸 -->
-							<view v-if="disableTouch" style="display: flex; flex-direction: row;">
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtimeX}}</view>
-								<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
-							</view>
-						</view>
-						<!-- 播放器 -->
-						<view style="display: flex; flex-direction: row; margin-top: 10rpx;">
-							<image @click="beforeMusic" src="@/static/music/before.png" style="width: 100rpx; height: 100rpx; margin-left: 14%;"></image>
-							<image v-if="isplay" @click="plays" src="@/static/music/play.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
-							<image v-if="!isplay" @click="plays" src="@/static/music/pause.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
-							<image @click="nextMusic" src="@/static/music/next.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
-						</view>
-					</view>
-					<view style="width: 100%; height: 300rpx;"></view>
-				</scroll-view>
-			</swiper-item>
-			<swiper-item>
-				<!-- 歌词 -->
-				<view style="width: 100%; height: 100%;" v-show="showitem">
-					<view style="width: 100%; opacity: 0;">.</view>
-					<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
-					<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
-					<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to bottom, transparent, transparent 0%, black 10%);">
-						<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to top, transparent, transparent 10%, black 35%);">
-							<scroll-view v-show="showLoadLrc===true" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-into-view="scrollIntoView" :scroll-y="true" :scroll-with-animation="true">
-								<view style="width: 100%; height: 150px;"></view>
-								<block v-for="(list,index) in lrc" :key="index">
-									<view :id="list.place" style="width: 100%; height: 1px;"></view>
-									<view @click="toJump(index)" :style="'width: 85%; font-size: 26px; font-weight: bold; color: #FFFFFF; margin-top: 80rpx; opacity: 0.4; transform: translateY(150px); word-wrap:break-word;'+list.animations" :class="(index>Number(scrollIntoView.split('place')[1])&&(index-Number(scrollIntoView.split('place')[1]))<9)?'anima-'+(index-Number(scrollIntoView.split('place')[1])+1):''">
-										{{list.lineLyric}}
+							<!-- 歌手信息 -->
+							<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
+								<view style="display: flex; flex-direction: column;">
+									<view style="width: 500rpx; font-size: 28px; font-weight: bold; color: #fefcff; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+										{{title}}
 									</view>
-								</block>
-								<view style="width: 100%; height: 600rpx;"></view>
-							</scroll-view>
-							<scroll-view v-show="showLoadLrc===false" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-y="true" :scroll-with-animation="true">
-								<view style="width: 100%; height: 20px;"></view>
-								<block v-for="(list,index) in content">
-									<view style="width: 85%; margin-top: 60rpx; display: flex; flex-direction: row;">
-										<image v-if="list.u_pic !== ''" :src="list.u_pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
-										<image v-if="list.u_pic.length == 0" src="@/static/music.png" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
-										<view style="width: 80%; margin-left: 30rpx; margin-top: 10rpx; display: flex; flex-direction: column;">
-											<view style="width: 100%; font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: 0.6; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
-												{{list.u_name}}
-											</view>
-											<view style="width: 95%; font-size: 17px; font-weight: bold; color: #FFFFFF; opacity: 0.98;">
-												{{list.msg}}
+									<view style="width: 500rpx; font-size: 18px; font-weight: bold; color: #fefcff; margin-top: 10rpx; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+										{{author}}
+									</view>
+								</view>
+								<!-- 爱心 -->
+								<view style="margin-left: 65rpx; display: flex; flex-direction: column;">
+									<image v-if="!islike" @click="like" src="@/static/music/no_like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
+									<image v-if="islike" @click="like" src="@/static/music/like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
+									<view style="font-size: 16px; color: #FFFFFF; text-align: center; margin-top: 15rpx; opacity: 0.9;">喜欢</view>
+								</view>
+							</view>
+							<!-- 信息栏 -->
+							<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
+								<!-- 下载 -->
+								<view @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
+									<image src="@/static/music/download.png" style="width: 65rpx; height: 65rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
+								</view>
+								<!-- 歌曲循环设置 -->
+								<view @click="nextCircle" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
+									<image v-if="next1" src="@/static/music/one_circle.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<image v-if="next2" src="@/static/music/luan_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<image v-if="next3" src="@/static/music/next_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<view v-if="next1" style="font-size: 14px; color: #FFFFFF; text-align: center;">单曲循环</view>
+									<view v-if="next2" style="font-size: 14px; color: #FFFFFF; text-align: center;">随机播放</view>
+									<view v-if="next3" style="font-size: 14px; color: #FFFFFF; text-align: center;">顺序播放</view>
+								</view>
+								<!-- 播放列表 -->
+								<view @click="toPlaylist" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%; margin-top: 9rpx;">
+									<image src="@/static/music/play_list.png" style="width: 60rpx; height: 60rpx; margin-left: 18rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">播放列表</view>
+								</view>
+								<!-- 更多 -->
+								<view @click="toMore" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
+									<image src="@/static/music/more.png" style="width: 68rpx; height: 68rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">更多</view>
+								</view>
+							</view>
+							<!-- 进度条 -->
+							<view @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" style="display: flex; flex-direction: column; height: 160rpx;">
+								<!-- 底座进度条 -->
+								<view style="width: 85%; margin-top: 70rpx; height: 5.8rpx; border-radius: 20rpx; margin-left: 6.5%; background-color: #FFFFFF; opacity: 0.5;"></view>
+								<!-- 未触摸 -->
+								<view v-if="!disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
+									<!-- 1.白底 没有触摸的时候的进度条 -->
+									<view :style="'width: '+ endper +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
+									<!-- 2.白底 圆圈的小点 -->
+									<view :style="'margin-left: '+ (endper - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
+								</view>
+								<!-- 触摸 -->
+								<view v-if="disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
+									<view :style="'width: '+ percent +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
+									<view :style="'margin-left: '+ (percent - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
+								</view>
+								<!-- 不触摸 -->
+								<view v-if="!disableTouch" style="display: flex; flex-direction: row;">
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtime}}</view>
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
+								</view>
+								<!-- 触摸 -->
+								<view v-if="disableTouch" style="display: flex; flex-direction: row;">
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtimeX}}</view>
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
+								</view>
+							</view>
+							<!-- 播放器 -->
+							<view style="display: flex; flex-direction: row; margin-top: 10rpx;">
+								<image @click="beforeMusic" src="@/static/music/before.png" style="width: 100rpx; height: 100rpx; margin-left: 14%;"></image>
+								<image v-if="isplay" @click="plays" src="@/static/music/play.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+								<image v-if="!isplay" @click="plays" src="@/static/music/pause.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+								<image @click="nextMusic" src="@/static/music/next.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+							</view>
+						</view>
+						<view style="width: 100%; height: 200rpx;"></view>
+					</scroll-view>
+					<block v-if="platform === 'ios'">
+						<view style="width: 100%; height: 100%;">
+							<!-- 图片 -->
+							<view style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
+								<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 20rpx; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
+							</view>
+							<!-- 歌手信息 -->
+							<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
+								<view style="display: flex; flex-direction: column;">
+									<view style="width: 500rpx; font-size: 28px; font-weight: bold; color: #fefcff; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+										{{title}}
+									</view>
+									<view style="width: 500rpx; font-size: 18px; font-weight: bold; color: #fefcff; margin-top: 10rpx; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+										{{author}}
+									</view>
+								</view>
+								<!-- 爱心 -->
+								<view style="margin-left: 65rpx; display: flex; flex-direction: column;">
+									<image v-if="!islike" @click="like" src="@/static/music/no_like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
+									<image v-if="islike" @click="like" src="@/static/music/like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
+									<view style="font-size: 16px; color: #FFFFFF; text-align: center; margin-top: 15rpx; opacity: 0.9;">喜欢</view>
+								</view>
+							</view>
+							<!-- 信息栏 -->
+							<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
+								<!-- 下载 -->
+								<view @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
+									<image src="@/static/music/download.png" style="width: 65rpx; height: 65rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
+								</view>
+								<!-- 歌曲循环设置 -->
+								<view @click="nextCircle" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
+									<image v-if="next1" src="@/static/music/one_circle.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<image v-if="next2" src="@/static/music/luan_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<image v-if="next3" src="@/static/music/next_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<view v-if="next1" style="font-size: 14px; color: #FFFFFF; text-align: center;">单曲循环</view>
+									<view v-if="next2" style="font-size: 14px; color: #FFFFFF; text-align: center;">随机播放</view>
+									<view v-if="next3" style="font-size: 14px; color: #FFFFFF; text-align: center;">顺序播放</view>
+								</view>
+								<!-- 播放列表 -->
+								<view @click="toPlaylist" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%; margin-top: 9rpx;">
+									<image src="@/static/music/play_list.png" style="width: 60rpx; height: 60rpx; margin-left: 18rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">播放列表</view>
+								</view>
+								<!-- 更多 -->
+								<view @click="toMore" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
+									<image src="@/static/music/more.png" style="width: 68rpx; height: 68rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">更多</view>
+								</view>
+							</view>
+							<!-- 进度条 -->
+							<view @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" style="display: flex; flex-direction: column; height: 160rpx;">
+								<!-- 底座进度条 -->
+								<view style="width: 85%; margin-top: 70rpx; height: 5.8rpx; border-radius: 20rpx; margin-left: 6.5%; background-color: #FFFFFF; opacity: 0.5;"></view>
+								<!-- 未触摸 -->
+								<view v-if="!disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
+									<!-- 1.白底 没有触摸的时候的进度条 -->
+									<view :style="'width: '+ endper +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
+									<!-- 2.白底 圆圈的小点 -->
+									<view :style="'margin-left: '+ (endper - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
+								</view>
+								<!-- 触摸 -->
+								<view v-if="disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
+									<view :style="'width: '+ percent +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
+									<view :style="'margin-left: '+ (percent - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
+								</view>
+								<!-- 不触摸 -->
+								<view v-if="!disableTouch" style="display: flex; flex-direction: row;">
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtime}}</view>
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
+								</view>
+								<!-- 触摸 -->
+								<view v-if="disableTouch" style="display: flex; flex-direction: row;">
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtimeX}}</view>
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
+								</view>
+							</view>
+							<!-- 播放器 -->
+							<view style="display: flex; flex-direction: row; margin-top: 10rpx;">
+								<image @click="beforeMusic" src="@/static/music/before.png" style="width: 100rpx; height: 100rpx; margin-left: 14%;"></image>
+								<image v-if="isplay" @click="plays" src="@/static/music/play.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+								<image v-if="!isplay" @click="plays" src="@/static/music/pause.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+								<image @click="nextMusic" src="@/static/music/next.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+							</view>
+						</view>
+					</block>
+				</swiper-item>
+				<swiper-item>
+					<!-- 歌词 -->
+					<view style="width: 100%; height: 100%;" v-show="showitem">
+						<view style="width: 100%; opacity: 0;">.</view>
+						<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
+						<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
+						<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to bottom, transparent, transparent 0%, black 10%);">
+							<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to top, transparent, transparent 10%, black 35%);">
+								<scroll-view v-show="showLoadLrc===true" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-into-view="scrollIntoView" :scroll-y="true" :scroll-with-animation="true">
+									<view style="width: 100%; height: 150px;"></view>
+									<block v-for="(list,index) in lrc" :key="index">
+										<view :id="list.place" style="width: 100%; height: 1px;"></view>
+										<view @click="toJump(index)" :style="'width: 85%; font-size: 26px; font-weight: bold; color: #FFFFFF; margin-top: 80rpx; opacity: 0.4; transform: translateY(150px); word-wrap:break-word;'+list.animations" :class="(index>Number(scrollIntoView.split('place')[1])&&(index-Number(scrollIntoView.split('place')[1]))<9)?'anima-'+(index-Number(scrollIntoView.split('place')[1])+1):''">
+											{{list.lineLyric}}
+										</view>
+									</block>
+									<view style="width: 100%; height: 600rpx;"></view>
+								</scroll-view>
+								<scroll-view v-show="showLoadLrc===false" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-y="true" :scroll-with-animation="true">
+									<view style="width: 100%; height: 20px;"></view>
+									<block v-for="(list,index) in content">
+										<view style="width: 85%; margin-top: 60rpx; display: flex; flex-direction: row;">
+											<image v-if="list.u_pic !== ''" :src="list.u_pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+											<image v-if="list.u_pic.length == 0" src="@/static/music.png" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+											<view style="width: 80%; margin-left: 30rpx; margin-top: 10rpx; display: flex; flex-direction: column;">
+												<view style="width: 100%; font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: 0.6; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+													{{list.u_name}}
+												</view>
+												<view style="width: 95%; font-size: 17px; font-weight: bold; color: #FFFFFF; opacity: 0.98;">
+													{{list.msg}}
+												</view>
 											</view>
 										</view>
-									</view>
-								</block>
-								<block v-if="content.length == 0">
-									<view style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
-										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">没有评论</view>
-									</view>
-								</block>
-								<block v-if="content.length !== 0">
-									<view @click="getMore" style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
-										<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">获取更多</view>
-									</view>
-								</block>
-								<view style="width: 100%; height: 600rpx;"></view>
-							</scroll-view>
+									</block>
+									<block v-if="content.length == 0">
+										<view style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+											<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">没有评论</view>
+										</view>
+									</block>
+									<block v-if="content.length !== 0">
+										<view @click="getMore" style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+											<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">获取更多</view>
+										</view>
+									</block>
+									<view style="width: 100%; height: 600rpx;"></view>
+								</scroll-view>
+							</view>
 						</view>
 					</view>
+				</swiper-item>
+			</swiper>
+			<!-- #endif -->
+			<!-- #ifdef H5 -->
+			<!-- 1.顶部菜单 -->
+			<view style="display: flex; flex-direction: row;">
+				<image @click="close" src="@/static/music/low.png" style="width: 50rpx; height: 44rpx; margin-left: 60rpx; margin-top: 40rpx;"></image>
+				<view style="display: flex; flex-direction: row; margin-left: 25%; margin-top: 35rpx;">
+					<view @click="gequ" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc1 +';'">歌曲</view>
+					<view style="font-size: 14px; color: #FFFFFF; opacity: 0.5;">｜</view>
+					<view @click="geci" :style="'font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: '+ opc2 +';'">歌词</view>
 				</view>
-			</swiper-item>
-		</swiper>
-		<!-- #endif -->
+			</view>
+			<!-- 2.内容部分 -->
+			<swiper :style="'width: 100%; height: '+ (screenHeight*0.72) +'px; position: absolute; margin-top: 30rpx;'" :current="current" @change="swithChange" :disable-touch="disableTouch">
+				<swiper-item>
+					<scroll-view :style="'width: 100%; height: '+ (screenHeight*0.74) +'px; mask-image: linear-gradient(to top, transparent, transparent 3%, black 10%);'" :scroll-y="true">
+						<view style="width: 100%; height: 100%;">
+							<!-- 图片 -->
+							<view id="a1" style="width: 650rpx; height: 650rpx; margin-top: 60rpx; margin-left: 6.5%;">
+								<image mode="aspectFill" :src="pic" style="width: 100%; height: 100%; border-radius: 20rpx; box-shadow: 0upx 0upx 2upx #f9f8ff;"></image>
+							</view>
+							<!-- 歌手信息 -->
+							<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
+								<view style="display: flex; flex-direction: column;">
+									<view style="width: 500rpx; font-size: 28px; font-weight: bold; color: #fefcff; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+										{{title}}
+									</view>
+									<view style="width: 500rpx; font-size: 18px; font-weight: bold; color: #fefcff; margin-top: 10rpx; background-color: transparent; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+										{{author}}
+									</view>
+								</view>
+								<!-- 爱心 -->
+								<view style="margin-left: 65rpx; display: flex; flex-direction: column;">
+									<image v-if="!islike" @click="like" src="@/static/music/no_like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
+									<image v-if="islike" @click="like" src="@/static/music/like.png" style="width: 80rpx; height: 80rpx; opacity: 0.8;"></image>
+									<view style="font-size: 16px; color: #FFFFFF; text-align: center; margin-top: 15rpx; opacity: 0.9;">喜欢</view>
+								</view>
+							</view>
+							<!-- 信息栏 -->
+							<view style="display: flex; flex-direction: row; margin-top: 60rpx; margin-left: 6.5%;">
+								<!-- 下载 -->
+								<view id="a2" @click="download" style="display: flex; flex-direction: column; opacity: 0.8; margin-top: 7rpx;">
+									<image src="@/static/music/download.png" style="width: 65rpx; height: 65rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">下载</view>
+								</view>
+								<!-- 歌曲循环设置 -->
+								<view @click="nextCircle" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
+									<image v-if="next1" src="@/static/music/one_circle.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<image v-if="next2" src="@/static/music/luan_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<image v-if="next3" src="@/static/music/next_play.png" style="width: 70rpx; height: 70rpx; margin-left: 15rpx;"></image>
+									<view v-if="next1" style="font-size: 14px; color: #FFFFFF; text-align: center;">单曲循环</view>
+									<view v-if="next2" style="font-size: 14px; color: #FFFFFF; text-align: center;">随机播放</view>
+									<view v-if="next3" style="font-size: 14px; color: #FFFFFF; text-align: center;">顺序播放</view>
+								</view>
+								<!-- 播放列表 -->
+								<view @click="toPlaylist" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%; margin-top: 9rpx;">
+									<image src="@/static/music/play_list.png" style="width: 60rpx; height: 60rpx; margin-left: 18rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">播放列表</view>
+								</view>
+								<!-- 更多 -->
+								<view @click="toMore" style="display: flex; flex-direction: column; opacity: 0.8; margin-left: 13.8%;">
+									<image src="@/static/music/more.png" style="width: 68rpx; height: 68rpx;"></image>
+									<view style="font-size: 14px; color: #FFFFFF; text-align: center;">更多</view>
+								</view>
+							</view>
+							<!-- 进度条 -->
+							<view @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" style="display: flex; flex-direction: column; height: 160rpx;">
+								<!-- 底座进度条 -->
+								<view style="width: 85%; margin-top: 70rpx; height: 5.8rpx; border-radius: 20rpx; margin-left: 6.5%; background-color: #FFFFFF; opacity: 0.5;"></view>
+								<!-- 未触摸 -->
+								<view v-if="!disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
+									<!-- 1.白底 没有触摸的时候的进度条 -->
+									<view :style="'width: '+ endper +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
+									<!-- 2.白底 圆圈的小点 -->
+									<view :style="'margin-left: '+ (endper - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
+								</view>
+								<!-- 触摸 -->
+								<view v-if="disableTouch" style="width: 85%; position: absolute; z-index: 1003; margin-top: 70rpx; margin-left: 6.5%;">
+									<view :style="'width: '+ percent +'%; height: 5.8rpx; border-radius: 20rpx; background-color: #FFFFFF;'"></view>
+									<view :style="'margin-left: '+ (percent - 1) +'%; width: 16rpx; height: 16rpx; margin-top: -10rpx; background-color: #FFFFFF; border-radius: 30rpx; position: absolute; z-index: 1004;'"></view>
+								</view>
+								<!-- 不触摸 -->
+								<view v-if="!disableTouch" style="display: flex; flex-direction: row;">
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtime}}</view>
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
+								</view>
+								<!-- 触摸 -->
+								<view v-if="disableTouch" style="display: flex; flex-direction: row;">
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; left: 6%; margin-top: 20rpx;">{{nowtimeX}}</view>
+									<view style="font-size: 13px; color: #FFFFFF; position: absolute; right: 9%; margin-top: 20rpx;">{{totaltime}}</view>
+								</view>
+							</view>
+							<!-- 播放器 -->
+							<view style="display: flex; flex-direction: row; margin-top: 10rpx;">
+								<image @click="beforeMusic" src="@/static/music/before.png" style="width: 100rpx; height: 100rpx; margin-left: 14%;"></image>
+								<image v-if="isplay" @click="plays" src="@/static/music/play.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+								<image v-if="!isplay" @click="plays" src="@/static/music/pause.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+								<image @click="nextMusic" src="@/static/music/next.png" style="width: 100rpx; height: 100rpx; margin-left: 15%;"></image>
+							</view>
+						</view>
+						<view style="width: 100%; height: 300rpx;"></view>
+					</scroll-view>
+				</swiper-item>
+				<swiper-item>
+					<!-- 歌词 -->
+					<view style="width: 100%; height: 100%;" v-show="showitem">
+						<view style="width: 100%; opacity: 0;">.</view>
+						<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
+						<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
+						<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to bottom, transparent, transparent 0%, black 10%);">
+							<view style=" width: 100%; height: 100%; mask-image: linear-gradient(to top, transparent, transparent 10%, black 35%);">
+								<scroll-view v-show="showLoadLrc===true" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-into-view="scrollIntoView" :scroll-y="true" :scroll-with-animation="true">
+									<view style="width: 100%; height: 150px;"></view>
+									<block v-for="(list,index) in lrc" :key="index">
+										<view :id="list.place" style="width: 100%; height: 1px;"></view>
+										<view @click="toJump(index)" :style="'width: 85%; font-size: 26px; font-weight: bold; color: #FFFFFF; margin-top: 80rpx; opacity: 0.4; transform: translateY(150px); word-wrap:break-word;'+list.animations" :class="(index>Number(scrollIntoView.split('place')[1])&&(index-Number(scrollIntoView.split('place')[1]))<9)?'anima-'+(index-Number(scrollIntoView.split('place')[1])+1):''">
+											{{list.lineLyric}}
+										</view>
+									</block>
+									<view style="width: 100%; height: 600rpx;"></view>
+								</scroll-view>
+								<scroll-view v-show="showLoadLrc===false" style="margin-top: 10rpx; width: 100%; height: 100%; margin-left: 8%;" :scroll-y="true" :scroll-with-animation="true">
+									<view style="width: 100%; height: 20px;"></view>
+									<block v-for="(list,index) in content">
+										<view style="width: 85%; margin-top: 60rpx; display: flex; flex-direction: row;">
+											<image v-if="list.u_pic !== ''" :src="list.u_pic" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+											<image v-if="list.u_pic.length == 0" src="@/static/music.png" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 100px;"></image>
+											<view style="width: 80%; margin-left: 30rpx; margin-top: 10rpx; display: flex; flex-direction: column;">
+												<view style="width: 100%; font-size: 16px; font-weight: bold; color: #FFFFFF; opacity: 0.6; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; white-space: wrap; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical;">
+													{{list.u_name}}
+												</view>
+												<view style="width: 95%; font-size: 17px; font-weight: bold; color: #FFFFFF; opacity: 0.98;">
+													{{list.msg}}
+												</view>
+											</view>
+										</view>
+									</block>
+									<block v-if="content.length == 0">
+										<view style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+											<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">没有评论</view>
+										</view>
+									</block>
+									<block v-if="content.length !== 0">
+										<view @click="getMore" style="width: 200rpx; height: 80rpx; border: 1px #FFFFFF solid; border-radius: 80rpx; margin-top: 100rpx; margin-left: 28%; opacity: 0.6;">
+											<view style="font-size: 14px; font-weight: bold; color: #FFFFFF; text-align: center;padding-top: 20rpx;">获取更多</view>
+										</view>
+									</block>
+									<view style="width: 100%; height: 600rpx;"></view>
+								</scroll-view>
+							</view>
+						</view>
+					</view>
+				</swiper-item>
+			</swiper>
+			<!-- #endif -->
+		</block>
 		<uni-popup type="bottom" ref="playlist">
 			<view :style="'width: '+ windowWidth +'px; height: '+ (screenHeight*0.8) +'px;'">
 				<playlist></playlist>
@@ -502,7 +643,13 @@
 			// #endif
 			this.screenHeight = uni.getSystemInfoSync().screenHeight;
 			this.windowWidth = uni.getSystemInfoSync().windowWidth;
-			this.platform = uni.getSystemInfoSync().platform;
+			this.windowHeight = uni.getSystemInfoSync().windowHeight;
+			let platform = uni.getSystemInfoSync().platform;
+			if(platform !== 'ios' && platform !== 'android'){
+				this.platform = "PC";
+			} else {
+				this.platform = uni.getSystemInfoSync().platform;
+			}
 			this.baseurl = this.$nodeurl;
 			this.percent = 0;
 			this.endper = 0;
@@ -1063,6 +1210,67 @@
 						next2: false,
 						next3: false
 					})
+				}
+			},
+			touchendX(){
+				for(let i=0;i<this.lrc.length;i++){
+					this.lrc[i].animations = "";
+				}
+				this.endper = this.percent;
+				this.nowtime = this.nowtimeX;
+				let seek = parseInt( (this.endper/100) * this.$duration );
+				this.$audio.seek( Number(seek) );
+				// 处理进度条调频问题
+				this.isToFlag = false;
+				this.disableTouch = false;
+			},
+			touchstartX(){
+				this.disableTouch = true;
+			},
+			touchmoveX(e){
+				if(this.disableTouch){
+					let min = this.windowWidth * 0.065;
+					let max = this.windowWidth * 0.270;
+					if(e.clientX <= (min+1)){
+						this.nowtimeX = '00:00';
+						this.percent = 0;
+						this.endper = this.percent;
+						this.nowtime = this.nowtimeX;
+						let seek = parseInt( (this.endper/100) * this.$duration );
+						this.$audio.seek( Number(seek) );
+						// 处理进度条调频问题
+						this.isToFlag = false;
+						this.disableTouch = false;
+					} else if(e.clientX >= (max-1)) {
+						this.nowtimeX = '00:00';
+						this.percent = 100;
+						this.endper = this.percent;
+						this.nowtime = this.nowtimeX;
+						let seek = parseInt( (this.endper/100) * this.$duration );
+						this.$audio.seek( Number(seek) );
+						// 处理进度条调频问题
+						this.isToFlag = false;
+						this.disableTouch = false;
+					} else {
+						let cur = e.clientX;
+						let len = max - min;
+						let current = cur - min;
+						let percent = current / len;
+						percent = parseInt(percent*100);
+						if(percent >= 0 && percent <= 100){
+							let times = (totalSeconds)=>{
+								const minutes = Math.floor(totalSeconds / 60);
+								const seconds = totalSeconds % 60;
+								function padTo2Digits(num) {
+								  return num.toString().padStart(2, '0');
+								}
+								const result = `${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
+								return result;
+							}
+							this.nowtimeX = times( parseInt( (percent/100) * this.$duration ) );
+							this.percent = percent;
+						}
+					}
 				}
 			},
 			touchend(){
