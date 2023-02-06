@@ -41,7 +41,7 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "小北云音乐",
+		"navigationBarTitleText": "开源音乐",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#000000"
 	}

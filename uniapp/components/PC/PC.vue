@@ -103,7 +103,8 @@
 				Music: [],
 				page: 1,
 				isClick: false,
-				textLrc: ""
+				textLrc: "",
+				
 			};
 		},
 		props: {
@@ -153,6 +154,8 @@
 					let num = parseInt(Number(lrc[i].time));
 					if(newtime > num-1 && newtime <= num){
 						lrcshows = true;
+						let scrollIntoView = "place"+i;
+						uni.setStorageSync("scrollIntoView", scrollIntoView);
 						this.textLrc = lrc[i].lineLyric;
 					}
 				}

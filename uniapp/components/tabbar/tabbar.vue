@@ -97,7 +97,9 @@
 				
 				shows: true,
 				
-				platform: ""
+				platform: "",
+				
+				scrollIntoView: ""
 			};
 		},
 		created() {
@@ -284,10 +286,24 @@
 						duration: 3000
 					})
 				}
-				
 			},
 			perCircle(){
 				this.pro = this.$percent / 100;
+				let endper = this.$percent;
+				let nowtime = this.$timeobj.nowtime;
+				let totaltime = this.$timeobj.totaltime;
+				let newtime = parseInt(Number(this.$currentTime));
+				let lrc = this.$musicInfo.lrc;
+				let lrcshows = false;
+				for(let i=0;i<lrc.length;i++){
+					let num = parseInt(Number(lrc[i].time));
+					if(newtime > num-1 && newtime <= num){
+						lrcshows = true;
+						let scrollIntoView = "place"+i;
+						uni.setStorageSync("scrollIntoView", scrollIntoView);
+					}
+				}
+				lrc = [];
 				setTimeout(()=>{
 					if(this.$isplay){
 						this.perCircle();

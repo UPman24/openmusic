@@ -333,7 +333,7 @@
 				</swiper-item>
 				<swiper-item>
 					<!-- 歌词 -->
-					<view style="width: 100%; height: 100%;" v-show="showitem">
+					<view style="width: 100%; height: 100%;">
 						<view style="width: 100%; opacity: 0;">.</view>
 						<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
 						<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
@@ -486,7 +486,7 @@
 				</swiper-item>
 				<swiper-item>
 					<!-- 歌词 -->
-					<view style="width: 100%; height: 100%;" v-show="showitem">
+					<view style="width: 100%; height: 100%;">
 						<view style="width: 100%; opacity: 0;">.</view>
 						<image v-if="showLoadLrc" @click="showCloseLrc" src="@/static/music/jump.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
 						<image v-if="!showLoadLrc" @click="showLrc" src="@/static/music/chacha.png" style="width: 100rpx; height: 100rpx; position: absolute; z-index: 100009; bottom: 20rpx; right: 50rpx; opacity: 0.3;"></image>
@@ -606,7 +606,7 @@
 				platform: "",//平台
 				
 				// 安卓端 背景模糊设置
-				params:{
+				params: {
 					width: uni.getSystemInfoSync().windowWidth + 'px',
 					height: uni.getSystemInfoSync().screenHeight + 'px',
 					image: this.$musicInfo.pic,
@@ -675,6 +675,12 @@
 			this.pre_url = this.$musicInfo.pre_url;
 			this.title = this.$musicInfo.title;
 			this.url = this.$musicInfo.url;
+			this.scrollIntoView = uni.getStorageSync("scrollIntoView");
+			if(this.scrollIntoView.length !== 0){
+				let animation = "opacity: 1; filter: blur(0px); -webkit-animation-fill-mode: forwards; animation-fill-mode: forwards;";
+				let info = Number(this.scrollIntoView.split("place")[1])
+				this.lrc[info].animations = animation;
+			}
 			this.getContent();//获取评论
 			this.next1 = uni.getStorageSync("next").next1;
 			this.next2 = uni.getStorageSync("next").next2;
@@ -889,6 +895,8 @@
 									this.$musicInfo.pre_url = music[0].pre_url;
 									this.$musicInfo.title = music[0].title;
 									this.$musicInfo.url = music[0].url;
+									this.pic = this.$musicInfo.pic;
+									this.params.image = this.$musicInfo.pic;
 									// #ifdef APP
 									if(this.platform !== 'ios'){
 										uni.downloadFile({
@@ -964,6 +972,8 @@
 									this.$musicInfo.pre_url = music[info+1].pre_url;
 									this.$musicInfo.title = music[info+1].title;
 									this.$musicInfo.url = music[info+1].url;
+									this.pic = this.$musicInfo.pic;
+									this.params.image = this.$musicInfo.pic;
 									// #ifdef APP
 									if(this.platform !== 'ios'){
 										uni.downloadFile({
@@ -1058,6 +1068,8 @@
 									this.$musicInfo.pre_url = music[music.length-1].pre_url;
 									this.$musicInfo.title = music[music.length-1].title;
 									this.$musicInfo.url = music[music.length-1].url;
+									this.pic = this.$musicInfo.pic;
+									this.params.image = this.$musicInfo.pic;
 									// #ifdef APP
 									if(this.platform !== 'ios'){
 										uni.downloadFile({
@@ -1133,6 +1145,8 @@
 									this.$musicInfo.pre_url = music[ins-1].pre_url;
 									this.$musicInfo.title = music[ins-1].title;
 									this.$musicInfo.url = music[ins-1].url;
+									this.pic = this.$musicInfo.pic;
+									this.params.image = this.$musicInfo.pic;
 									// #ifdef APP
 									if(this.platform !== 'ios'){
 										uni.downloadFile({
@@ -1328,8 +1342,10 @@
 									this.lrcshows = true;
 									let animation = "opacity: 1; filter: blur(0px); -webkit-animation-fill-mode: forwards; animation-fill-mode: forwards;";
 									this.lrc[i].animations = animation;
-									if(i <= lrc.length-1 && i >= 1){
-										this.lrc[i-1].animations = "";
+									for(let ik=0;ik<this.lrc.length;ik++){
+										if(ik !== i){
+											this.lrc[ik].animations = "";
+										}
 									}
 								}
 							}
@@ -1348,8 +1364,10 @@
 								this.lrcshows = true;
 								let animation = "opacity: 1; -webkit-animation-fill-mode: forwards; animation-fill-mode: forwards;";
 								this.lrc[i].animations = animation;
-								if(i <= lrc.length-1 && i >= 1){
-									this.lrc[i-1].animations = "";
+								for(let ik=0;ik<this.lrc.length;ik++){
+									if(ik !== i){
+										this.lrc[ik].animations = "";
+									}
 								}
 							}
 						}
