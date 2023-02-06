@@ -41,9 +41,9 @@
 ## 项目演示：
 
 #### 安卓下载地址：（二维码）
-<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/app/download10.png" width="150px"/>
+<img src="https://bmdlife-1304060577.cos.ap-beijing.myqcloud.com/app/music/app/download11.png" width="150px"/>
 
-#### [版本：1.1.8]
+#### [版本：1.1.9]
 
 #### iOS下载地址：（限100人）
 
