@@ -4,7 +4,7 @@
 			<view style="width: 100%; height: 1px;"></view>
 			<view style="font-size: 22px; font-weight: bold; position: absolute; color: #000000; text-align: center; margin-top: 10%; width: 100%; opacity: 0.5;"></view>
 			<image src="@/static/music.png" style="width: 400rpx; height: 400rpx; margin-left: 23%; margin-top: 25%; border-radius: 1000rpx;"></image>
-			<view style="font-size: 24px; font-weight: bold; color: #00a9ff; width: 100%; text-align: center; margin-top: 80rpx;">小北云音乐 听我所想</view>
+			<view style="font-size: 24px; font-weight: bold; color: #00a9ff; width: 100%; text-align: center; margin-top: 80rpx;">开源音乐 听我所想</view>
 			<view class="smallcircle2"></view>
 			<view class="bigcircle2"></view>
 			<view @click="phoneAndcode" style="width: 90%; height: 100rpx; background:linear-gradient(to right,#65adff,#0092ff); margin-top: 120rpx; border-radius: 100rpx; margin-left: 5%;">
@@ -23,7 +23,7 @@
 				<view style="width: 1250px; height: 650px; background-color: #252425; margin-top: 30px; margin-left: 90px; border-radius: 20px;">
 					<view style="display: flex; flex-direction: column; width: 100%;">
 						<image src="@/static/music.png" style="width: 150px; height: 150px; border-radius: 20px; margin-top: 10%; margin-left: 41%;"></image>
-						<view style="font-size: 23px; font-weight: bold; text-align: center; color: #FFFFFF; margin-left: -5%; margin-top: 20px;">小北云音乐</view>
+						<view style="font-size: 23px; font-weight: bold; text-align: center; color: #FFFFFF; margin-left: -5%; margin-top: 20px;">开源音乐</view>
 					</view>
 					<view @click="phoneAndcode" style="width: 28%; height: 50px; background:linear-gradient(to right,#65adff,#0092ff); margin-top: 60px; border-radius: 100rpx; margin-left: 33%;">
 						<view style="font-size: 18px; font-weight: bold; color: #FFFFFF; text-align: center; padding-top: 14px;">手机验证码登录</view>

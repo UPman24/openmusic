@@ -4,7 +4,7 @@
 			<view style="width: 20%; height: 100%; border-top-left-radius: 20px; border-bottom-left-radius: 20px; border-right: 1px solid #373638;">
 				<view style="display: flex; flex-direction: row; margin-top: 15px; margin-left: 20%;">
 					<image src="@/static/music.png" style="width: 40px; height: 40px; border-radius: 10px;"></image>
-					<view style="font-size: 20px; font-weight: bold; color: #FFFFFF; margin-top: 5px; margin-left: 15px;">小北云音乐</view>
+					<view style="font-size: 20px; font-weight: bold; color: #FFFFFF; margin-top: 5px; margin-left: 15px;">开源音乐</view>
 				</view>
 				<scroll-view style="width: 100%; height: 88%; margin-top: 5%;" :scroll-y="true">
 					<view style="width: 100%; height: 1rpx;"></view>

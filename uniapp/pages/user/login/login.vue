@@ -69,15 +69,6 @@
 					uni.showLoading({
 						title: '正在获取验证码'
 					})
-					uni.request({
-						url: 'https://2908110e-6da2-4899-8b44-d45c153457ad.bspapp.com/tosendsms?info=sendMusic&phone=' + this.phone,
-						method: 'GET',
-						success: (res) => {
-							uni.hideLoading()
-							this.code = res.data.codes + '';
-							// console.log(this.code);
-						}
-					})
 					this.disabled = true;
 					// 秒数递减
 					this.secondControl = setInterval(()=>{

@@ -1,9 +1,9 @@
 {
-    "name" : "小北云音乐",
-    "appid" : "__UNI__1B981A4",
+    "name" : "开源音乐",
+    "appid" : "__UNI__293A32E",
     "description" : "",
-    "versionName" : "1.1.8",
-    "versionCode" : 118,
+    "versionName" : "1.0.0",
+    "versionCode" : 100,
     "transformPx" : false,
     "networkTimeout" : {
         "request" : 6000
