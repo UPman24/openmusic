@@ -28,12 +28,16 @@
                     |_ user.js      //需要修改的文件
                     
         |_ Dockerfile               //可以选择 Docker 部署
-        |_ index.js                 //执行 npm install && npm run start 能直接部署
+        |_ index.js                 //执行 npm install && npm run dev 能直接部署
         |_ package.json             //依赖
         
     |_ backnode                     //用于获取歌曲信息
         |_ package.json             //依赖
         |_ ...                      //执行 npm install && npm run start 能直接部署
+    
+    |_ kuwoPython
+        |_ MainServer.py            //执行 pip install -r requirements.txt && python MainServer.py 
+        |_ ...
         
     |_ uniapp                       //此文件可以直接导入 HbuilderX 中
 ```
@@ -45,13 +49,11 @@
 
 #### [版本：1.1.9]
 
-#### iOS下载地址：（限100人）
-
-#### [苹果手机下载地址](https://testflight.apple.com/join/RICp2M8W)
-
 #### 在线预览
 
 [小北云音乐](http://music.bfmzdx.cn)
+
+#### Docker暂未更新：接口可使用：http://kuwo.bfmzdx.cn
 
 ## 项目模块：
 

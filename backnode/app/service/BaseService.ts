@@ -4,11 +4,10 @@ import { v4 as uuidv4 } from 'uuid'
 class BaseService extends Service {
   _headers (opts) {
     return {
-      Cookie: 'Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1623339177,1623339183; _ga=GA1.2.1195980605.1579367081; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1623339982; kw_token=3E7JFQ7MRPL; _gid=GA1.2.747985028.1623339179; _gat=1',
-      csrf: '3E7JFQ7MRPL',
-      Host: 'www.kuwo.cn',
-      Referer: 'http://www.kuwo.cn/',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0',
+      Referer: 'http://kuwo.cn/',
+      Secret: '6c3e1759abe6bd58f56bb713f6aee0bb738189eae7837be83636389b96fd4d7104c13520',
+      Cookie: 'Hm_Iuvt_cdb524f42f0ce19b169b8072123a4727=2bm5QbPQKPZSRHyFN4pbZnGcNJ4J2DZJ',
       ...opts,
     }
   }

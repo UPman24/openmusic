@@ -1,7 +1,22 @@
+import fetch from 'node-fetch';
+
 const BaseService = require('./BaseService')
 
 export default class PlayUrl extends BaseService {
-  async getPlayUrl (mid, br = '128kmp3') {
-    return this.commonRequest(`http://www.kuwo.cn/api/v1/www/music/playUrl?mid=${mid}&type=convert_url3&br=${br}`)
+  async getPlayUrl (mid) {
+    let url = 'http://0.0.0.0:8899/kw/url/' + mid
+    // mid, br = '128kmp3'
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return {
+        data: {
+          code: 400,
+          url: ''
+        }
+      }
+    }
   }
 }
